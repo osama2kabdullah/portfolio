@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1>Admin Dashboard</h1>
+<div class="grid stats">
+  <div class="card">Projects: {{ counts.projects }}</div>
+  <div class="card">Skills: {{ counts.skills }}</div>
+  <div class="card">Posts: {{ counts.posts }}</div>
+  <div class="card">Messages: {{ counts.messages }} ({{ counts.unread_messages }} unread)</div>
+</div>
+
+<section>
+  <h2>Recent Messages</h2>
+  <ul>
+    {% for m in recent_messages %}
+      <li>{{ m.created|date:"Y-m-d H:i" }} — <strong>{{ m.name }}</strong>: {{ m.subject }}</li>
+    {% empty %}
+      <li>No messages yet.</li>
+    {% endfor %}
+  </ul>
+  <p><a href="/admin/">Go to full admin</a></p>
+</section>
+{% endblock %}

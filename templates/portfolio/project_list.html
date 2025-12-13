@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Portfolio{% endblock %}
+{% block content %}
+<h1>Portfolio</h1>
+<div class="grid">
+  {% for p in projects %}
+    <article class="card">
+      <h3><a href="{{ p.get_absolute_url|default:'/portfolio/' }}">{{ p.title }}</a></h3>
+      <p>{{ p.excerpt|default:p.description|truncatechars:160 }}</p>
+    </article>
+  {% empty %}
+    <p>No projects yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}
