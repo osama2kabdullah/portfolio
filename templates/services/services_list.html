@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}services{% endblock %}
+{% block content %}
+<h1>services</h1>
+<div class="grid">
+  {% for service in services %}
+    <div class="card">
+      <h3><a href="{% url 'service_detail' service.slug %}">{{ service.title }}</a></h3>
+    </div>
+  {% empty %}
+    <p>No posts yet.</p>
+  {% endfor %}
+</div>
+
+{% if services.has_other_pages %}
+  <div style="margin-top:12px">
+    {% if services.has_previous %}
+      <a class="btn" href="?page={{ services.previous_page_number }}">Previous</a>
+    {% endif %}
+    {% if services.has_next %}
+      <a class="btn" href="?page={{ services.next_page_number }}">Next</a>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% endblock %}

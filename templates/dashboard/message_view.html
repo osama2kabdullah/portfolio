@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Message{% endblock %}
+{% block content %}
+<div class="dashboard-grid">
+  <aside class="dashboard-aside">
+    <h3>Admin</h3>
+    <a class="nav-item" href="{% url 'dashboard_messages' %}">Back to Messages</a>
+  </aside>
+  <section class="dashboard-main">
+    <div class="form-card">
+      <h3>{{ message.subject }}</h3>
+      <div class="meta">From {{ message.name }} • {{ message.email }} • {{ message.created|date:'Y-m-d H:i' }}</div>
+      <p>{{ message.body }}</p>
+      <form method="post">{% csrf_token %}
+        {{ form.is_read }}
+        <button class="btn" type="submit">Save</button>
+      </form>
+    </div>
+  </section>
+</div>
+{% endblock %}

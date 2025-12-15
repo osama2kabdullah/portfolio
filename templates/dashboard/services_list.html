@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Manage Services{% endblock %}
+{% block content %}
+<div class="dashboard-grid">
+  <aside class="dashboard-aside">
+    <h3>Admin</h3>
+    <a class="nav-item" href="{% url 'dashboard_index' %}">Overview</a>
+    <a class="nav-item" href="{% url 'dashboard_services' %}">Services</a>
+  </aside>
+  <section class="dashboard-main">
+    <h2>Services</h2>
+    <div class="grid">
+      {% for s in services %}
+        <div class="card">
+          <h3>{{ s.title }}</h3>
+          <p class="muted">{{ s.description|truncatechars:120 }}</p>
+          <p style="margin-top:8px"><a class="btn" href="/admin/services/service/{{ s.pk }}/change/">Edit in Admin</a></p>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

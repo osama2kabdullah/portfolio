@@ -1,10 +1,83 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}Contact{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/contact.css' %}" />
+{% endblock %} 
 {% block content %}
-<h1>Contact</h1>
-<form method="post">
+<!-- HEADER -->
+<section style="padding: var(--gap-md) 0 0;">
+    <div class="section-title">Inquire Now</div>
+    <h1 class="display-text">
+        Let's Transform <br>
+        Your Vision.
+    </h1>
+</section>
+
+<!-- CONTACT FORM & INFO -->
+<section class="contact-content section-padding" style="padding-bottom: var(--gap-md);">
+    <div class="contact-info">
+        <p>
+            I only take on a few selected projects at a time to ensure maximum quality and dedication. Please provide as much detail as possible about your project, timeline, and budget.
+        </p>
+
+        <p>
+            Typical project timelines start at 6 weeks, and budgets typically begin at $8,000 USD, depending on complexity.
+        </p>
+        
+        <h3>Quick Connect</h3>
+        <a href="mailto:hello@alexdev.com">Email: hello@alexdev.com</a>
+        <a href="tel:+15551234567">Phone: (555) 123-4567</a>
+
+        <h3 style="margin-top: 20px;">Socials</h3>
+        <div style="display: flex; gap: 20px;">
+            <a target="_blank" class="btn-link" style="font-size: 1rem;" href="#">LinkedIn</a>
+            <a target="_blank" class="btn-link" style="font-size: 1rem;" href="#">Github</a>
+        </div>
+    </div>
+
+    <!-- CONTACT FORM -->
+    <form method="POST" action="{% url 'contact' %}">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="{{ form.name.id_for_label }}">Your Full Name*</label>
+            {{ form.name }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.email.id_for_label }}">Work Email*</label>
+            {{ form.email }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.service.id_for_label }}">
+                What service are you interested in?
+            </label>
+            {{ form.service }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.budget.id_for_label }}">
+                Estimated Budget Range (USD)*
+            </label>
+            {{ form.budget }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.body.id_for_label }}">
+                Project Details / Goals*
+            </label>
+            {{ form.body }}
+        </div>
+
+        <button type="submit" class="submit-btn">Send Inquiry</button>
+    </form>
+</section>
+
+{% comment %} <form method="post">
   {% csrf_token %}
   {{ form.as_p }}
   <button type="submit" class="btn">Send</button>
-</form>
+</form> {% endcomment %}
 {% endblock %}

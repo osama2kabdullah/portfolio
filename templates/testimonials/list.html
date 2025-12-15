@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Testimonials{% endblock %}
+{% block content %}
+<h1>Testimonials</h1>
+<p style="margin-top:8px"><a class="btn" href="{% url 'testimonial_submit' %}">Submit a testimonial</a></p>
+<div class="grid">
+  {% for t in testimonials %}
+    <div class="card">
+      <p>{{ t.body }}</p>
+      <div class="meta">— {{ t.name }}{% if t.company %}, {{ t.company }}{% endif %}{% if t.role %} • {{ t.role }}{% endif %}</div>
+    </div>
+  {% endfor %}
+  <div style="grid-column:1/-1">
+    <div class="muted">Page {{ testimonials.number }} of {{ testimonials.paginator.num_pages }}</div>
+    <div style="margin-top:8px">
+      {% if testimonials.has_previous %}
+        <a href="?page={{ testimonials.previous_page_number }}" class="btn">Previous</a>
+      {% endif %}
+      {% if testimonials.has_next %}
+        <a href="?page={{ testimonials.next_page_number }}" class="btn">Next</a>
+      {% endif %}
+    </div>
+    <p style="margin-top:10px"><a class="btn" href="{% url 'testimonial_submit' %}">Submit a testimonial</a></p>
+  </div>
+</div>
+{% endblock %}

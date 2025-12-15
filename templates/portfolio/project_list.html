@@ -1,15 +1,68 @@
 {% extends "base.html" %}
-{% block title %}Portfolio{% endblock %}
+{% load static %}
+{% block title %}Project Archive{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/project_list.css' %}" />
+{% endblock %} 
 {% block content %}
-<h1>Portfolio</h1>
-<div class="grid">
-  {% for p in projects %}
-    <article class="card">
-      <h3><a href="{{ p.get_absolute_url|default:'/portfolio/' }}">{{ p.title }}</a></h3>
-      <p>{{ p.excerpt|default:p.description|truncatechars:160 }}</p>
-    </article>
+<!-- HEADER -->
+<section style="padding: var(--gap-md) 0;">
+    <div class="section-title">The Archive</div>
+    <h1 class="display-text">
+        Every project. <br>
+        Every success.
+    </h1>
+</section>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <a href="{% url 'project_list' %}" class="filter_link {% if not selected_service %}active{% endif %}">All ({{ projects.paginator.count }})</a>
+  {% for service in filters %}
+    <a href="?service={{ service.slug }}" 
+       class="filter_link {% if service.slug == selected_service %}active{% endif %}">
+       {{ service.title }} ({{ service.project_count }})
+    </a>
+  {% endfor %}
+</div>
+
+<!-- PROJECT LIST -->
+<section class="project-list" style="padding-bottom: var(--gap-lg);">
+
+  {% for project in projects %}
+    <a href="{% url 'project_detail' project.slug %}" class="project-card">
+        {% if project.image %}
+        <div class="project-img-wrap">
+            <img src="{{ project.image.url }}" alt="{{ project.title }}">
+        </div>
+        {% endif %}
+        <div class="project-meta">
+            <h3>{{ project.title }}</h3>
+            <div class="project-tags">
+              {% for tech in project.technologies.all %}
+                {{ tech.name }}{% if not forloop.last %} / {% endif %}
+              {% endfor %}
+            </div>
+        </div>
+    </a>
   {% empty %}
     <p>No projects yet.</p>
   {% endfor %}
+</section>
+
+{% if projects.has_other_pages %}
+<div style="text-align: center; margin-bottom: 60px;">
+  {% if projects.has_previous %}
+    <a href="?page={{ projects.previous_page_number }}{% if selected_service %}&service={{ selected_service }}{% endif %}" class="btn-link">
+      &larr; Previous
+    </a>
+    &nbsp;&nbsp;&nbsp;
+  {% endif %}
+  {% if projects.has_next %}
+    <a href="?page={{ projects.next_page_number }}{% if selected_service %}&service={{ selected_service }}{% endif %}" class="btn-link">
+      Next &rarr;
+    </a>
+  {% endif %}
 </div>
+{% endif %}
+
 {% endblock %}

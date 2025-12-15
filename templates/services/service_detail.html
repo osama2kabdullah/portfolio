@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{{ service.title }}{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>{{ service.title }}</h1>
+  <div class="meta">{{ service.order }}</div>
+  <p class="muted">{{ service.description }}</p>
+  <p style="margin-top:12px">
+    <a class="btn" href="/contact/">Request this service</a>
+  </p>
+  {% if service.projects.exists %}
+    <h3 style="margin-top:18px">Related Projects</h3>
+    <div class="grid">
+      {% for p in service.projects.all %}
+        <div class="card">
+          <h4><a href="/portfolio/{{ p.slug }}/">{{ p.title }}</a></h4>
+          <p class="muted">{{ p.excerpt|default:p.description|truncatechars:120 }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Manage Testimonials{% endblock %}
+{% block content %}
+<div class="dashboard-grid">
+  <aside class="dashboard-aside">
+    <h3>Admin</h3>
+    <a class="nav-item" href="{% url 'dashboard_index' %}">Overview</a>
+    <a class="nav-item" href="{% url 'dashboard_testimonials' %}">Testimonials</a>
+  </aside>
+  <section class="dashboard-main">
+    <h2>Testimonials</h2>
+    <div class="grid">
+      {% for t in testimonials %}
+        <div class="card">
+          <p>{{ t.body }}</p>
+          <div class="meta">{{ t.name }} • {{ t.company }}</div>
+          <div style="margin-top:8px">
+            {% if not t.approved %}
+              <a class="btn" href="{% url 'dashboard_testimonial_toggle' t.pk 'approve' %}">Approve</a>
+            {% else %}
+              <a class="btn" href="{% url 'dashboard_testimonial_toggle' t.pk 'decline' %}">Decline</a>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

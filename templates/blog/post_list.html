@@ -1,12 +1,48 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}Blog{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/post_list.css' %}" />
+{% endblock %} 
 {% block content %}
-<h1>Blog</h1>
-<ul>
+<!-- HEADER -->
+<section style="padding: var(--gap-md) 0;">
+    <div class="section-title">The Journal</div>
+    <h1 class="display-text">
+        Insights on Code, <br>
+        Design, & Freelance.
+    </h1>
+</section>
+
+<!-- ARTICLE LIST -->
+<section class="section-padding" style="padding-top: 0;">
   {% for post in posts %}
-    <li><a href="/blog/{{ post.slug }}/">{{ post.title }}</a> — <small>{{ post.created|date:"Y-m-d" }}</small></li>
+    <a href="{% url 'post_detail' post.slug %}" class="article-list-item">
+        <h2>{{ post.title }}</h2>
+        <div class="article-meta">
+            <p>{{ post.created|date:"Y-m-d" }}</p>
+            <span>
+              {% for tag in post.tags.all %}
+                #{{ tag.name }} 
+              {% endfor %}
+            </span>
+        </div>
+    </a>
   {% empty %}
-    <li>No posts yet.</li>
+    <p>No posts yet.</p>
   {% endfor %}
-</ul>
+</section>
+
+{% if posts.has_other_pages %}
+<div style="text-align: center; margin-bottom: 60px;">
+  {% if posts.has_previous %}
+  <a href="?page={{ posts.previous_page_number }}" class="btn-link">&larr; Previous</a>
+  &nbsp;&nbsp;&nbsp;
+  {% endif %}
+  {% if posts.has_next %}
+  <a href="?page={{ posts.next_page_number }}" class="btn-link">Next &rarr;</a>
+  {% endif %}
+</div>
+{% endif %}
+
 {% endblock %}

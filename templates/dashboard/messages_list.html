@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Messages{% endblock %}
+{% block content %}
+<div class="dashboard-grid">
+  <aside class="dashboard-aside">
+    <h3>Admin</h3>
+    <a class="nav-item" href="{% url 'dashboard_index' %}">Overview</a>
+  </aside>
+  <section class="dashboard-main">
+    <h2>Messages</h2>
+    <div class="grid">
+      {% for m in messages %}
+        <div class="card">
+          <div class="meta">{{ m.created|date:'Y-m-d H:i' }} • {{ m.email }}</div>
+          <strong>{{ m.name }}</strong>
+          <p class="muted">{{ m.subject }}</p>
+          <a class="btn" href="{% url 'dashboard_message_view' m.pk %}">Open</a>
+        </div>
+      {% empty %}
+        <p>No messages yet.</p>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

@@ -1,6 +1,30 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}Thanks{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/thank_for_submission.css' %}" />
+{% endblock %} 
 {% block content %}
-<h1>Thanks!</h1>
-<p>Your message has been received. I'll get back to you soon.</p>
+<section class="thank-you-block">
+  <div class="section-title" style="justify-content: center;">Submission Received</div>
+  
+  <h1 class="display-text">
+      Thank You for Your <br>
+      Project Inquiry.
+  </h1>
+
+  <p>
+      Your detailed message has been successfully sent. I am excited to review your vision and determine if we are a perfect fit. I will personally respond to your email within 1-2 business days.
+  </p>
+  
+  <div class="next-steps">
+      <a href="index.html" class="btn-link" style="color: var(--primary);">
+          &larr; Return to Home
+      </a>
+      <a href="blog.html" class="btn-link">
+          Read the Latest Journal &rarr;
+      </a>
+  </div>
+
+</section>
 {% endblock %}

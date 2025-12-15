@@ -1,34 +1,173 @@
 {% extends "base.html" %}
-{% block title %}Home — Developer Portfolio{% endblock %}
+{% load static %}
+
+{% block title %}
+Alex | Digital Craftsman
+{% endblock %} 
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}" />
+{% endblock %} 
+
 {% block content %}
+<!-- HERO -->
 <section class="hero">
-  <h1>Hi, I'm a Web Developer</h1>
-  <p>Modern, maintainable web apps built with Django.</p>
+  <h1 class="display-text">
+    Creating digital <br />
+    <span style="color: var(--text-muted); font-style: italic"
+      >experiences</span
+    >
+    that leave a mark.
+  </h1>
+  <p class="hero-sub">
+    Freelance Creative Developer helping brands stand out through clean code and
+    thoughtful design.
+  </p>
+  <div class="hero-scroll-btn">Scroll &darr;</div>
 </section>
 
-<section>
-  <h2>Featured Projects</h2>
-  <div class="grid">
-    {% for p in projects %}
-      <article class="card">
-        <h3><a href="/portfolio/{{ p.slug }}/">{{ p.title }}</a></h3>
-        <p>{{ p.excerpt|default:p.description|truncatechars:140 }}</p>
-      </article>
-    {% empty %}
-      <p>No projects yet.</p>
-    {% endfor %}
+<!-- BENTO ABOUT -->
+<section id="about" class="section-padding">
+  <div class="section-title">About Me</div>
+  <div class="bento-grid">
+    <!-- Main About Box -->
+    <div class="bento-box box-large">
+      <h2 style="font-size: 2.5rem; line-height: 1.1">
+        I blend technical expertise with artistic direction.
+      </h2>
+      <p>
+        Unlike traditional developers who just write code, I focus on the "feel"
+        of the website. I believe a website should be an extension of your
+        brand's soul, not just a utility.
+      </p>
+      <div style="margin-top: auto">
+        <a href="about-me.html" class="btn-link">Read My Full Story</a>
+      </div>
+    </div>
+
+    <!-- Skills Box -->
+    <div class="bento-box box-skill">
+      <h3>Tech Stack</h3>
+      <div class="skill-list">
+        <span class="skill-pill">React</span>
+        <span class="skill-pill">Next.js</span>
+        <span class="skill-pill">GSAP</span>
+        <span class="skill-pill">WebGL</span>
+        <span class="skill-pill">Node.js</span>
+        <span class="skill-pill">Supabase</span>
+      </div>
+    </div>
+
+    <!-- Stats Box -->
+    <div class="bento-box">
+      <h3 style="font-size: 3rem; color: var(--primary)">5+</h3>
+      <p style="margin: 0">Years of Exp.</p>
+      <h3 style="font-size: 3rem; color: var(--primary); margin-top: 10px">
+        40+
+      </h3>
+      <p style="margin: 0">Projects Shipped</p>
+    </div>
   </div>
 </section>
 
-<section>
-  <h2>Recent Posts</h2>
-  <ul>
-    {% for post in posts %}
-      <li><a href="/blog/{{ post.slug }}/">{{ post.title }}</a></li>
-    {% empty %}
-      <li>No posts yet.</li>
-    {% endfor %}
-  </ul>
-</section>
+<!-- SERVICES LIST -->
+{% if services %}
+<section id="services" class="section-padding">
+<div class="section-title">Services</div>
 
+{% for service in services %}
+<a href="{% url 'service_detail' service.slug %}" class="service-item">
+    <span class="service-num">{{ forloop.counter|stringformat:"02d" }}</span>
+    <span class="service-name">{{ service.title }}</span>
+    <span class="service-arrow">&rarr;</span>
+</a>
+{% endfor %}
+
+<div style="margin-top: 40px; text-align: right">
+    <a href="{% url 'service_list' %}" class="btn-link">View All Services</a>
+</div>
+</section>
+{% endif %}
+
+<!-- WORK GALLERY (Asymmetrical) -->
+{% if projects %}
+<section id="work" class="section-padding">
+  <div class="section-title">Selected Work</div>
+
+  <div class="projects-wrapper">
+    {% for project in projects %}
+    <a href="{% url 'project_detail' project.slug %}" class="project-card">
+      {% if project.image %}
+      <div class="project-img-wrap">
+      <!-- Replace with Image -->
+      <img
+        src="{{ project.image.url }}"
+        alt="{{ project.title }}"
+      />
+      </div>
+      {% endif %}
+      <div class="project-meta">
+        <h3>{{ project.title }}</h3>
+        <div class="project-tags">{{ project.excerpt|default:project.description|truncatechars:140 }}</div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+
+  <div style="text-align: center; margin-top: 80px">
+    <a href="{% url 'project_list' %}" class="btn-link">View Entire Archive</a>
+  </div>
+</section>
+{% endif %}
+
+<!-- REVIEWS & JOURNAL -->
+ {% if testimonials or posts %}
+ <div class="dual-section section-padding">
+   {% if testimonials %}
+   <section id="reviews">
+     <div class="section-title">Testimonials</div>
+     {% for testimonial in testimonials %}
+     <div class="review-card">
+       <p class="review-quote">
+         "{{ testimonial.body }}"
+       </p>
+       <div style="display: flex; gap: 15px; align-items: center">
+         <div
+           style="
+             width: 40px;
+             height: 40px;
+             background: #ddd;
+             border-radius: 50%;
+           "
+         ></div>
+         <div>
+           <strong>{{ testimonial.name }}</strong><br />
+           <span style="font-size: 0.8rem; color: var(--text-muted)"
+             >{{ testimonial.role }}</span
+           >
+         </div>
+       </div>
+     </div>
+     {% endfor %}
+     <a href="{% url 'testimonials_list' %}" class="btn-link">Read Client Stories</a>
+   </section>
+   {% endif %}
+   {% if posts %}
+   <section id="journal">
+     <div class="section-title">The Journal</div>
+ 
+     {% for post in posts %}
+     <a href="{% url 'post_detail' post.slug %}" class="blog-list-item">
+       <h4>{{ post.title }}</h4>
+       <span style="color: var(--text-muted); font-size: 0.8rem">{{ post.updated | date:"F d, Y" }}</span>
+     </a>
+     {% endfor %}
+ 
+     <div style="margin-top: 30px">
+       <a href="{% url 'post_list' %}" class="btn-link">Read All Articles</a>
+     </div>
+   </section>
+   {% endif %}
+ </div>
+ {% endif %}
 {% endblock %}

@@ -8,6 +8,9 @@ urlpatterns = [
     path("portfolio/", include("portfolio.urls")),
     path("blog/", include("blog.urls")),
     path("contact/", include("contact.urls")),
+    path("services/", include("services.urls")),
+    path("about/", include("about_me.urls")),
+    path("testimonials/", include("testimonials.urls")),
     path("dashboard/", include("dashboard.urls")),
     path("favicon.ico", RedirectView.as_view(url="/static/favicon.ico", permanent=True)),
 ]

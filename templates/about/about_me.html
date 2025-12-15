@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}About Me{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/about_me.css' %}" />
+{% endblock %} 
+{% block content %}
+<!-- HEADER -->
+<section class="header-section">
+    <h1 class="display-text">
+        The Architect <br>
+        Behind the Code.
+    </h1>
+    <p style="font-size: 1.5rem; color: var(--text-muted); margin-top: 20px; max-width: 700px;">
+        I believe that true digital craftsmanship requires more than just technical skill—it requires empathy, vision, and a deep appreciation for detail.
+    </p>
+</section>
+
+<!-- FULL-WIDTH IMAGE -->
+<div class="image-full-width">
+    <img src="https://placehold.co/1200x400/1C1917/FAFAF9?text=Studio+Space+or+Abstract+Visual" alt="Alex's Creative Studio">
+</div>
+
+<!-- CONTENT & TIMELINE -->
+<section class="content-layout section-padding">
+    <aside class="sidebar">
+        <h3>My Journey</h3>
+        <div class="timeline">
+            <div class="timeline-item">
+                <h4>Creative Development Freelance</h4>
+                <p>2020 - Present: Focused on high-impact brand websites and e-commerce platforms.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>Lead Frontend Engineer</h4>
+                <p>2017 - 2020: Managed a team delivering large-scale financial dashboards.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>Web Design Bootcamp</h4>
+                <p>2016: Specialized in visual design and user experience principles.</p>
+            </div>
+            <div class="timeline-item">
+                <h4>B.S. Computer Science</h4>
+                <p>2012 - 2016: University of Technology, focusing on algorithms and data structures.</p>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 40px;">Core Values</h3>
+        <ul style="font-size: 1.1rem; line-height: 2;">
+            <li>&#10003; Performance First</li>
+            <li>&#10003; Design Integrity</li>
+            <li>&#10003; Transparent Process</li>
+        </ul>
+    </aside>
+    <article class="main-content">
+        <div class="section-title">My Philosophy</div>
+        <p>My career began in traditional computer science, optimizing backend systems. But I quickly discovered my true passion was at the intersection of logic and artistry—the frontend. I found that a millisecond delay or a slight design misalignment could ruin an entire user interaction.</p>
+
+        <p>That is why I approach every project as an act of creation, not just assembly. We’re not building a website; we are crafting a digital presence that feels intuitive, responsive, and genuinely *exciting* to use. I combine the robust architecture of a software engineer with the eye of a designer.</p>
+
+        <p>This holistic approach allows me to deliver solutions that are not only beautiful on the surface but are also scalable, maintainable, and highly optimized for modern web standards. I focus on technologies that push boundaries, such as React, GSAP for smooth animations, and Next.js for superior performance.</p>
+
+        <p>If you’re looking for a partner who cares as much about your brand's success as you do, let's connect.</p>
+        <a href="contact.html" class="btn-link" style="margin-top: 20px;">Get in Touch Today &rarr;</a>
+    </article>
+</section>
+{% endblock %}

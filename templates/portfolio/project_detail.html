@@ -1,6 +1,111 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}{{ project.title }}{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/project_details.css' %}" />
+{% endblock %} 
 {% block content %}
+
+<!-- PROJECT HERO / TITLE -->
+<header class="hero-title">
+    <div class="section-title" style="justify-content: center;">Case Study: Full-Stack Development</div>
+    
+    <h1 class="display-text">
+        Project Nexus: Rebuilding a Legacy System from the Ground Up
+    </h1>
+    
+    <p style="font-size: 1.2rem; color: var(--text-muted); max-width: 700px; margin: 0 auto;">
+        A comprehensive strategic engagement to modernize an outdated e-commerce platform, resulting in a 40% reduction in load time and a 15% increase in conversion rate.
+    </p>
+
+    <div class="project-metadata">
+        <div class="meta-item">
+            <strong>Client</strong>
+            <span>Nexus Corp.</span>
+        </div>
+        <div class="meta-item">
+            <strong>Timeline</strong>
+            <span>10 Weeks</span>
+        </div>
+        <div class="meta-item">
+            <strong>Services</strong>
+            <span>UX/UI, React, Node.js, Cloud Hosting</span>
+        </div>
+        <div class="meta-item">
+            <strong>Year</strong>
+            <span>2024</span>
+        </div>
+    </div>
+</header>
+
+<!-- MAIN IMAGE MOCKUP -->
+<div class="main-image-container">
+    <!-- Using a placeholder as per instructions, replace with project image URL in real app -->
+    <div class="main-image-placeholder">
+        High-Fidelity Mockup (Desktop View)
+    </div>
+</div>
+
+
+<!-- CASE STUDY CONTENT -->
+<section class="case-study-content">
+
+    <div class="content-block">
+        <div class="section-title">01. The Challenge</div>
+        <h2>A Stagnant E-commerce Platform</h2>
+        <p>
+            Nexus Corp. operated a successful but aging e-commerce site built on a monolithic architecture. The system was slow, difficult to update, and required excessive resources for maintenance. Their primary goals were to improve site performance, enhance the mobile user experience, and create a scalable foundation for future growth.
+        </p>
+        <p>
+            The key pain points identified through initial audits and stakeholder interviews were: average page load speed over 4 seconds, complex checkout process, and lack of integration with modern payment gateways. The existing codebase was heavily tangled, making bug fixes risky and feature development prohibitively slow.
+        </p>
+    </div>
+
+    <div class="content-block">
+        <div class="section-title">02. My Solution</div>
+        <h2>Strategic, Modular Replatforming</h2>
+        <p>
+            I proposed a phased replatforming strategy. We moved the frontend to a React-based single-page application (SPA), enabling fast, dynamic rendering. The backend was restructured into a set of microservices using Node.js and hosted on Google Cloud, allowing for independent scaling of different functionalities (e.g., inventory vs. payment processing).
+        </p>
+        <p>
+            The checkout flow was streamlined, reducing the required steps from five to three. We integrated a headless CMS for marketing content, giving the Nexus team full control over promotions without requiring developer intervention. This decoupling of concerns drastically improved deployment speed and stability.
+        </p>
+    </div>
+    
+    <!-- Testimonial Block to add human proof -->
+    <div class="testimonial-block">
+        <p>
+            “Alex completely transformed our outdated system. The site feels instantaneous, and for the first time in years, our team can deploy new features without fearing a system-wide crash. Highly recommend for complex modernization projects.”
+        </p>
+        <cite>— Sarah Chen, Head of Digital Operations, Nexus Corp.</cite>
+    </div>
+
+    <div class="content-block">
+        <div class="section-title">03. The Results & Impact</div>
+        <h2>Measurable Performance Gains</h2>
+        <p>
+            The new architecture delivered immediate and measurable business impact:
+            <ul>
+                <li><strong>Page Load Time:</strong> Reduced from 4.2 seconds to 2.5 seconds (40% improvement).</li>
+                <li><strong>Conversion Rate:</strong> Increased by 15% within the first month post-launch due to the streamlined checkout.</li>
+                <li><strong>Developer Productivity:</strong> Feature deployment time was reduced from an average of two weeks to three days.</li>
+                <li><strong>Scalability:</strong> The platform successfully handled peak holiday traffic without incident, a major risk with the previous system.</li>
+            </ul>
+        </p>
+        <p>
+            The project was delivered on time and under budget, setting Nexus Corp. up for a successful future in e-commerce.
+        </p>
+    </div>
+
+</section>
+
+<!-- CALL TO ACTION / NEXT PROJECT -->
+<div class="next-project-link">
+    <a href="another_project.html" class="btn-link">
+        View Next Project: The FinTech Dashboard &rarr;
+    </a>
+</div>
+
 <article>
   <h1>{{ project.title }}</h1>
   <p>{{ project.description }}</p>

@@ -1,23 +1,37 @@
 {% extends "base.html" %}
-{% block title %}Dashboard{% endblock %}
 {% block content %}
-<h1>Admin Dashboard</h1>
-<div class="grid stats">
-  <div class="card">Projects: {{ counts.projects }}</div>
-  <div class="card">Skills: {{ counts.skills }}</div>
-  <div class="card">Posts: {{ counts.posts }}</div>
-  <div class="card">Messages: {{ counts.messages }} ({{ counts.unread_messages }} unread)</div>
-</div>
+<div class="dashboard-grid">
+  <aside class="dashboard-aside">
+    <h3>Admin</h3>
+    <a class="nav-item" href="{% url 'dashboard_index' %}">Overview</a>
+    <a class="nav-item" href="{% url 'dashboard_projects' %}">Projects</a>
+    <a class="nav-item" href="{% url 'dashboard_posts' %}">Posts</a>
+    <a class="nav-item" href="{% url 'dashboard_messages' %}">Messages</a>
+    <a class="nav-item" href="{% url 'dashboard_settings' %}">Site Settings</a>
+    <hr>
+    <a class="nav-item" href="/admin/">Django Admin</a>
+  </aside>
+  <section class="dashboard-main">
+    <div class="grid" style="grid-template-columns:repeat(4,1fr);gap:12px">
+      <div class="card"><strong>{{ counts.projects }}</strong><div class="meta">Projects</div></div>
+      <div class="card"><strong>{{ counts.posts }}</strong><div class="meta">Posts</div></div>
+      <div class="card"><strong>{{ counts.skills }}</strong><div class="meta">Skills</div></div>
+      <div class="card"><strong>{{ counts.messages }}</strong><div class="meta">Messages</div></div>
+    </div>
 
-<section>
-  <h2>Recent Messages</h2>
-  <ul>
-    {% for m in recent_messages %}
-      <li>{{ m.created|date:"Y-m-d H:i" }} — <strong>{{ m.name }}</strong>: {{ m.subject }}</li>
-    {% empty %}
-      <li>No messages yet.</li>
-    {% endfor %}
-  </ul>
-  <p><a href="/admin/">Go to full admin</a></p>
-</section>
+    <h3 style="margin-top:18px">Recent messages</h3>
+    <div class="grid">
+      {% for m in recent_messages %}
+        <div class="card">
+          <div class="meta">{{ m.created|date:'Y-m-d H:i' }} — <strong>{{ m.name }}</strong></div>
+          <div class="muted">{{ m.subject }}</div>
+          <p>{{ m.body|truncatechars:160 }}</p>
+          <a class="btn" href="{% url 'dashboard_message_view' m.pk %}">Open</a>
+        </div>
+      {% empty %}
+        <p>No messages yet.</p>
+      {% endfor %}
+    </div>
+  </section>
+</div>
 {% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Manage Projects{% endblock %}
+{% block content %}
+<div class="dashboard-grid">
+  <aside class="dashboard-aside">
+    <h3>Admin</h3>
+    <a class="nav-item" href="{% url 'dashboard_index' %}">Overview</a>
+    <a class="nav-item" href="{% url 'dashboard_projects' %}">Projects</a>
+    <a class="nav-item" href="{% url 'dashboard_project_create' %}">+ New Project</a>
+  </aside>
+  <section class="dashboard-main">
+    <h2>Projects</h2>
+    <div class="grid">
+      {% for p in projects %}
+        <div class="card">
+          <h3>{{ p.title }}</h3>
+          <div class="meta">{{ p.created|date:'Y-m-d' }} • {{ p.technologies.count }} techs</div>
+          <p class="muted">{{ p.excerpt|default:p.description|truncatechars:120 }}</p>
+          <a class="btn" href="{% url 'dashboard_project_edit' p.pk %}">Edit</a>
+        </div>
+      {% empty %}
+        <p>No projects yet.</p>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}
