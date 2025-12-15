@@ -1,13 +1,28 @@
 from django.contrib import admin
-from .models import Service
+from .models import Service, Deliverable, ProcessStep
 
+class DeliverableInline(admin.TabularInline):
+    model = Deliverable
+    extra = 1
+    fields = ("name", "order")
+    ordering = ("order",)
+
+
+class ProcessStepInline(admin.TabularInline):
+    model = ProcessStep
+    extra = 1
+    fields = ("title", "description", "order")
+    ordering = ("order",)
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
     list_display = ("title", "published", "order")
-    prepopulated_fields = {"slug": ("title",)}
+    list_filter = ("published",)
     search_fields = ("title", "description")
     ordering = ("order",)
-from django.contrib import admin
+    prepopulated_fields = {"slug": ("title",)}
 
-# Register your models here.
+    inlines = [
+        DeliverableInline,
+        ProcessStepInline,
+    ]

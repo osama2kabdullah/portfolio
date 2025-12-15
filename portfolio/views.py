@@ -3,6 +3,7 @@ from django.core.paginator import Paginator
 from .models import Project
 from services.models import Service
 from django.db.models import Count, Q
+from testimonials.models import Testimonial
 
 
 def project_list(request):
@@ -33,4 +34,41 @@ def project_list(request):
 
 def project_detail(request, slug):
     project = get_object_or_404(Project, slug=slug, published=True)
-    return render(request, "portfolio/project_detail.html", {"project": project})
+
+    sections = project.sections.all()
+
+    testimonial = (
+        Testimonial.objects
+        .filter(project=project, approved=True)
+        .order_by("-featured", "order")
+        .first()
+    )
+
+    next_project = (
+        Project.objects
+        .filter(published=True)
+        .exclude(id=project.id)
+        .filter(created__gt=project.created)
+        .order_by("created")
+        .first()
+    )
+
+    if not next_project:
+        next_project = (
+            Project.objects
+            .filter(published=True)
+            .exclude(id=project.id)
+            .order_by("created")
+            .first()
+        )
+
+    return render(
+        request,
+        "portfolio/project_detail.html",
+        {
+            "project": project,
+            "sections": sections,
+            "testimonial": testimonial,
+            "next_project": next_project,
+        }
+    )

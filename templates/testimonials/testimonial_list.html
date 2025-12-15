@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Testimonials{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/testimonial_list.css' %}" />
+{% endblock %}
+{% block content %}
+<!-- HEADER -->
+<section style="padding: var(--gap-md) 0;">
+    <div class="section-title">Client Stories</div>
+    <h1 class="display-text">
+        The Proof <br>
+        is in the Partnership.
+    </h1>
+</section>
+
+<!-- REVIEWS GRID -->
+<section class="reviews-grid section-padding" style="padding-top: 0;">
+  {% for testimonial in testimonials %}
+    <div class="review-card">
+      <p class="review-quote">
+        "{{ testimonial.body }}"
+      </p>
+      <div style="display: flex; gap: 15px; align-items: center">
+        <div
+          style="
+            width: 40px;
+            height: 40px;
+            background: #ddd;
+            border-radius: 50%;
+          "
+        ></div>
+        <div>
+          <strong>{{ testimonial.name }}</strong><br />
+          <span style="font-size: 0.8rem; color: var(--text-muted)"
+            >{{ testimonial.role }}</span
+          >
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</section>
+
+{% if testimonials.has_other_pages %}
+  <div style="text-align: center; margin-bottom:var(--gap-md)">
+    {% if testimonials.has_previous %}
+      <a class="btn-link" href="?page={{ testimonials.previous_page_number }}">&larr; Previous</a>
+      &nbsp;&nbsp;&nbsp;
+    {% endif %}
+    {% if testimonials.has_next %}
+      <a class="btn-link" href="?page={{ testimonials.next_page_number }}">Next  &rarr;</a>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% endblock %}

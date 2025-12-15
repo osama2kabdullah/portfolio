@@ -8,7 +8,7 @@ from core.models import SiteSettings
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ["title", "slug", "excerpt", "description", "url", "repo_url", "published", "featured", "technologies"]
+        fields = ["title", "slug", "excerpt", "live_url", "repo_url", "published", "featured", "technologies"]
         widgets = {"technologies": forms.CheckboxSelectMultiple}
 
 

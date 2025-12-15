@@ -18,10 +18,10 @@
   </p>
   
   <div class="next-steps">
-      <a href="index.html" class="btn-link" style="color: var(--primary);">
+      <a href="{% url "home" %}" class="btn-link" style="color: var(--primary);">
           &larr; Return to Home
       </a>
-      <a href="blog.html" class="btn-link">
+      <a href="{% url "post_list" %}" class="btn-link">
           Read the Latest Journal &rarr;
       </a>
   </div>

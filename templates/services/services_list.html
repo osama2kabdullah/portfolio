@@ -1,24 +1,42 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}services{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/service_list.css' %}" />
+{% endblock %}
 {% block content %}
-<h1>services</h1>
-<div class="grid">
+<!-- SERVICE HERO -->
+<header class="hero-services">
+    <div class="section-title" style="justify-content: center;">Strategic Digital Partnership</div>
+    
+    <h1 class="display-text">
+        Specialized Services for Modern Development
+    </h1>
+
+    <p>
+        From initial concept and architectural planning to deployment and optimization, I offer targeted services designed to deliver scalable, high-performance web applications and systems.
+    </p>
+</header>
+
+<!-- SERVICES GRID -->
+<section id="services-grid" class="services-grid">
   {% for service in services %}
-    <div class="card">
-      <h3><a href="{% url 'service_detail' service.slug %}">{{ service.title }}</a></h3>
-    </div>
-  {% empty %}
-    <p>No posts yet.</p>
+    <a href="{% url 'service_detail' service.slug %}" class="service-card">
+        <div class="service-number">{{ forloop.counter|stringformat:"02d" }}.</div>
+        <h3>{{ service.title }}</h3>
+        <p>{{ service.description }}</p>
+    </a>
   {% endfor %}
-</div>
+</section>
 
 {% if services.has_other_pages %}
-  <div style="margin-top:12px">
+  <div style="text-align: center; margin-bottom:var(--gap-md)">
     {% if services.has_previous %}
-      <a class="btn" href="?page={{ services.previous_page_number }}">Previous</a>
+      <a class="btn-link" href="?page={{ services.previous_page_number }}">&larr; Previous</a>
+      &nbsp;&nbsp;&nbsp;
     {% endif %}
     {% if services.has_next %}
-      <a class="btn" href="?page={{ services.next_page_number }}">Next</a>
+      <a class="btn-link" href="?page={{ services.next_page_number }}">Next  &rarr;</a>
     {% endif %}
   </div>
 {% endif %}

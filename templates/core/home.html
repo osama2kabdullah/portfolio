@@ -108,7 +108,7 @@ Alex | Digital Craftsman
       {% endif %}
       <div class="project-meta">
         <h3>{{ project.title }}</h3>
-        <div class="project-tags">{{ project.excerpt|default:project.description|truncatechars:140 }}</div>
+        <div class="project-tags">{{ project.excerpt|default:project.hero_description|truncatechars:140 }}</div>
       </div>
     </a>
     {% endfor %}

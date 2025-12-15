@@ -9,7 +9,7 @@ def testimonials_list(request):
     paginator = Paginator(qs, 6)
     page = request.GET.get("page")
     items = paginator.get_page(page)
-    return render(request, "testimonials/list.html", {"testimonials": items})
+    return render(request, "testimonials/testimonial_list.html", {"testimonials": items})
 
 
 def testimonial_submit(request):
@@ -19,10 +19,7 @@ def testimonial_submit(request):
             t = form.save(commit=False)
             t.approved = False
             t.save()
-            return render(request, "testimonials/thanks.html", {"testimonial": t})
+            return render(request, "testimonials/testimonial_submit_thanks.html", {"testimonial": t})
     else:
         form = TestimonialSubmissionForm()
-    return render(request, "testimonials/submit.html", {"form": form})
-from django.shortcuts import render
-
-# Create your views here.
+    return render(request, "testimonials/testimonial_submit.html", {"form": form})
