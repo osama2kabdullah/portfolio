@@ -29,3 +29,19 @@ class ClientAdmin(admin.ModelAdmin):
 class SkillAdmin(admin.ModelAdmin):
     list_display = ("name", "level", "order")
     ordering = ("-level",)
+
+
+@admin.register(ProjectSection)
+class ProjectSectionAdmin(admin.ModelAdmin):
+    list_display = ("project", "heading", "order", "is_highlight")
+    list_filter = ("is_highlight", "project")
+    search_fields = ("heading", "subheading", "body", "project__title")
+    ordering = ("order",)
+
+
+@admin.register(ProjectImage)
+class ProjectImageAdmin(admin.ModelAdmin):
+    list_display = ("project", "caption", "order")
+    list_filter = ("project",)
+    search_fields = ("caption", "project__title")
+    ordering = ("order",)

@@ -26,3 +26,19 @@ class ServiceAdmin(admin.ModelAdmin):
         DeliverableInline,
         ProcessStepInline,
     ]
+
+
+@admin.register(Deliverable)
+class DeliverableAdmin(admin.ModelAdmin):
+    list_display = ("name", "service", "order")
+    list_filter = ("service",)
+    search_fields = ("name",)
+    ordering = ("order",)
+
+
+@admin.register(ProcessStep)
+class ProcessStepAdmin(admin.ModelAdmin):
+    list_display = ("title", "service", "order")
+    list_filter = ("service",)
+    search_fields = ("title", "description")
+    ordering = ("order",)
