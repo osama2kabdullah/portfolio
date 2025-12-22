@@ -23,7 +23,7 @@
 .bento-grid {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr;
-    grid-template-rows: 300px 300px;
+    grid-auto-rows: minmax(150px, auto); 
     gap: 20px;
 }
 .bento-box {
@@ -124,6 +124,7 @@
 /* --- MOBILE --- */
 @media (max-width: 1024px) {
     .bento-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+    .bento-box { padding: 10px; }
     .box-large { grid-column: 1; grid-row: auto; }
     .projects-wrapper { grid-template-columns: 1fr; gap: 40px; }
     .project-card:nth-child(even) { margin-top: 0; }

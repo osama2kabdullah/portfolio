@@ -32,16 +32,19 @@ Alex | Digital Craftsman
   <div class="bento-grid">
     <!-- Main About Box -->
     <div class="bento-box box-large">
-      <h2 style="font-size: 2.5rem; line-height: 1.1">
-        I blend technical expertise with artistic direction.
-      </h2>
-      <p>
-        Unlike traditional developers who just write code, I focus on the "feel"
-        of the website. I believe a website should be an extension of your
-        brand's soul, not just a utility.
-      </p>
-      <div style="margin-top: auto">
-        <a href="about-me.html" class="btn-link">Read My Full Story</a>
+      <h2 style="font-size: 2.5rem; line-height: 1.1">I blend technical expertise with creative problem-solving</h2>
+      
+      <p>{{ profile.short_bio }}</p>
+      
+      {% if profile.profile_image %}
+
+      <div style="margin-top: 10px;">
+        <img src="{{ profile.profile_image.url }}" alt="Profile Image">
+      </div>
+      {% endif %}
+      
+      <div style="margin-top: 10px;">
+        <a href="{% url 'about' %}" class="btn-link">Read My Full Story</a>
       </div>
     </div>
 
@@ -57,7 +60,7 @@ Alex | Digital Craftsman
 
     <!-- Stats Box -->
     <div class="bento-box">
-      <h3 style="font-size: 3rem; color: var(--primary)">5+</h3>
+      <h3 style="font-size: 3rem; color: var(--primary)">{{ profile.years_of_experience }}+</h3>
       <p style="margin: 0">Years of Exp.</p>
       <h3 style="font-size: 3rem; color: var(--primary); margin-top: 10px">
         {{ project_count }}+
