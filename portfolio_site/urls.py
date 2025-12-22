@@ -12,5 +12,4 @@ urlpatterns = [
     path("about/", include("about_me.urls")),
     path("testimonials/", include("testimonials.urls")),
     path('admin/', include(('dashboard.urls', 'dashboard'), namespace='dashboard')),
-    path("favicon.ico", RedirectView.as_view(url="/static/favicon.ico", permanent=True)),
 ]

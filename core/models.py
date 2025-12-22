@@ -1,27 +1,45 @@
 from django.db import models
-
+from django.core.exceptions import ValidationError
 
 class SiteSettings(models.Model):
-	site_title = models.CharField(max_length=200, default="My Portfolio")
-	tagline = models.CharField(max_length=250, blank=True)
-	logo = models.ImageField(upload_to="site/", blank=True, null=True)
-	about = models.TextField(blank=True)
-	contact_email = models.EmailField(blank=True)
-	github = models.URLField(blank=True)
-	twitter = models.URLField(blank=True)
-	linkedin = models.URLField(blank=True)
+    # Site Info
+    site_title = models.CharField(max_length=200, default="My Portfolio")
+    tagline = models.CharField(max_length=250, blank=True)
+    logo = models.ImageField(upload_to="site/", blank=True, null=True)
+    favicon = models.ImageField(
+        upload_to="site/",
+        blank=True,
+        null=True,
+        help_text="Upload favicon (16x16 or 32x32, max 100KB)"
+    )
 
-	class Meta:
-		verbose_name = "Site Settings"
+    def clean(self):
+        super().clean()
+        if self.favicon and self.favicon.size > 102400:
+            raise ValidationError({
+                "favicon": "Favicon file size must be under 100KB."
+            })
 
-	def __str__(self):
-		return "Site Settings"
+    # Footer / About
+    about_short = models.TextField(blank=True)
+    footer_text = models.TextField(blank=True)
 
-	def save(self, *args, **kwargs):
-		self.pk = 1
-		super().save(*args, **kwargs)
+    # SEO
+    meta_title = models.CharField(max_length=200, blank=True)
+    meta_description = models.CharField(max_length=160, blank=True)
+    og_title = models.CharField(max_length=200, blank=True)
+    og_description = models.CharField(max_length=160, blank=True)
+    og_image = models.ImageField(upload_to="site/seo/", blank=True, null=True)
+    twitter_card = models.CharField(max_length=50, default="summary_large_image", blank=True)
 
-	@classmethod
-	def load(cls):
-		obj, created = cls.objects.get_or_create(pk=1)
-		return obj
+    class Meta:
+        verbose_name = "Site Settings"
+        verbose_name_plural = "Site Settings"
+
+    def __str__(self):
+        return "Site Settings"
+
+    @classmethod
+    def load(cls):
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj

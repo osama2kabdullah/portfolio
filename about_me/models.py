@@ -80,6 +80,18 @@ class CoreValue(models.Model):
     def __str__(self):
         return self.title
 
+class SocialLink(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="social_links")
+    platform_name = models.CharField(max_length=50, help_text="e.g., GitHub, LinkedIn")
+    url = models.URLField(help_text="Full URL to your social profile")
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["order"]
+
+    def __str__(self):
+        return f"{self.platform_name} ({self.url})"
+
 class AboutSettings(models.Model):
     hero_title = models.CharField(
         max_length=255,

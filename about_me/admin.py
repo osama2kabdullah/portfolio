@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile, Journey, CoreValue, AboutSettings
+from .models import Profile, Journey, CoreValue, AboutSettings, SocialLink
 
 class JourneyInline(admin.TabularInline):
     model = Journey
@@ -14,6 +14,11 @@ class ProfileAdmin(admin.ModelAdmin):
     list_display = ("full_name", "is_active")
     filter_horizontal = ("skills",)
     inlines = [JourneyInline, CoreValueInline]
+
+class SocialLinkInline(admin.TabularInline):
+    model = SocialLink
+    extra = 1
+    ordering = ("order",)
 
 @admin.register(AboutSettings)
 class AboutSettingsAdmin(admin.ModelAdmin):

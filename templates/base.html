@@ -4,8 +4,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>{% block title %}Developer Portfolio{% endblock %}</title>
-  <!-- Importing Google Fonts -->
+  
+  <title>{% if site_settings.meta_title %}{{ site_settings.meta_title }}{% else %}{{ site_settings.site_title }}{% endif %}</title>
+  <meta name="description" content="{{ site_settings.meta_description }}">
+  <meta property="og:title" content="{{ site_settings.og_title|default:site_settings.site_title }}">
+  <meta property="og:description" content="{{ site_settings.og_description|default:site_settings.meta_description }}">
+  {% if site_settings.og_image %}<meta property="og:image" content="{{ site_settings.og_image.url }}">{% endif %}
+  <meta name="twitter:card" content="{{ site_settings.twitter_card }}">
+  {% if site_settings.favicon %}
+    <link rel="icon" href="{{ site_settings.favicon.url }}" type="image/png">
+    <link rel="shortcut icon" href="{{ site_settings.favicon.url }}">
+    <link rel="apple-touch-icon" href="{{ site_settings.favicon.url }}">
+  {% endif %}
+
+
+  <!-- Fonts & CSS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -14,41 +27,44 @@
 </head>
 <body>
 
+  <!-- Navbar -->
   <nav>
-    <div class="nav-logo"><a href="{% url 'home' %}">Osama Abdullah.</a></div>
+    <div class="nav-logo">
+      <a href="{% url 'home' %}">
+        {% if site_settings.logo %}
+          <img src="{{ site_settings.logo.url }}" alt="{{ site_settings.site_title }}" style="height: 40px;">
+        {% else %}
+          {{ site_settings.site_title }}
+        {% endif %}
+      </a>
+    </div>
     <ul class="nav-links">
-        <li><a href="{% url 'about' %}">About</a></li>
-        <li><a href="{% url 'service_list' %}">Services</a></li>
-        <li><a href="{% url 'project_list' %}">Prevous Works</a></li>
-        <li><a href="{% url 'testimonials_list' %}">Testimonials</a></li>
-        <li><a href="{% url 'post_list' %}">Journal</a></li>
+      <li><a href="{% url 'about' %}">About</a></li>
+      <li><a href="{% url 'service_list' %}">Services</a></li>
+      <li><a href="{% url 'project_list' %}">Previous Works</a></li>
+      <li><a href="{% url 'testimonials_list' %}">Testimonials</a></li>
+      <li><a href="{% url 'post_list' %}">Journal</a></li>
     </ul>
     <a href="{% url 'contact' %}" style="font-weight: 700;">Let's Talk &rarr;</a>
   </nav>
 
   <main class="container">
-
     {% block content %}{% endblock %}
-    
+
+    <!-- Footer -->
     <footer id="contact">
       {% if show_footer_contact is defined or show_footer_contact %}
-          <!-- footer contact form -->
-          <div class="footer-cta">
-              <p style="text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.7; margin-bottom: 20px;">Project Inquiry</p>
-              <h2>Have an idea?</h2>
-              <a href="{% url 'contact' %}" style="background: white; color: black; padding: 20px 40px; border-radius: 50px; font-weight: bold; font-size: 1.2rem; display: inline-block; transition: 0.3s;">Start a Project</a>
-          </div>
+      <div class="footer-cta">
+        <p style="text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.7; margin-bottom: 20px;">Project Inquiry</p>
+        <h2>Have an idea?</h2>
+        <a href="{% url 'contact' %}" style="background: white; color: black; padding: 20px 40px; border-radius: 50px; font-weight: bold; font-size: 1.2rem; display: inline-block; transition: 0.3s;">Start a Project</a>
+      </div>
       {% endif %}
-      
+
       <div style="display: flex; justify-content: space-between; padding-bottom: 40px; font-size: 0.9rem; color: var(--text-muted);">
-          <div>&copy; 2025 Alex Dev.</div>
-          <div style="display: flex; gap: 20px;">
-            <a target="_blank" href="#">LinkedIn</a>
-            <a target="_blank" href="#">Github</a>
-          </div>
+        <div>{{ site_settings.footer_text|default:"© 2025 Your Name" }}</div>
       </div>
     </footer>
-
   </main>
 
 </body>

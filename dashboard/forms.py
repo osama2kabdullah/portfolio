@@ -49,4 +49,4 @@ class MessageForm(forms.ModelForm):
 class SiteSettingsForm(forms.ModelForm):
     class Meta:
         model = SiteSettings
-        fields = ["site_title", "tagline", "about", "contact_email", "github", "twitter", "linkedin"]
+        fields = ["site_title"]
