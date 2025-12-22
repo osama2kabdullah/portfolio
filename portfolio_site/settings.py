@@ -96,15 +96,23 @@ LOGIN_REDIRECT_URL = '/admin/'
 LOGOUT_REDIRECT_URL = '/admin/login/'
 
 SUPABASE_URL = os.getenv('SUPABASE_URL')
-SUPABASE_KEY = os.getenv('SUPABASE_SERVICE_ROLE_KEY')
-SUPABASE_BUCKET_NAME = os.getenv('SUPABASE_BUCKET')
+SUPABASE_SERVICE_KEY = os.getenv('SUPABASE_SERVICE_ROLE_KEY')
+SUPABASE_BUCKET = os.getenv('SUPABASE_BUCKET')
 
-DEFAULT_FILE_STORAGE = 'django_storage_supabase.SupabaseStorage'
+# DEFAULT_FILE_STORAGE = "core.storage.supabase.SupabaseStorage"
+STORAGES = {
+    "default": {
+        "BACKEND": "core.storage.supabase.SupabaseStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
