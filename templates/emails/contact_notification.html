@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>New Contact Message</title>
+</head>
+<body>
+    <h2>New Contact Form Submission</h2>
+
+    <p><strong>Name:</strong> {{ message.name }}</p>
+    <p><strong>Email:</strong> {{ message.email }}</p>
+
+    {% if message.service %}
+        <p><strong>Service:</strong> {{ message.service }}</p>
+    {% endif %}
+
+    {% if message.budget %}
+        <p><strong>Budget:</strong> ${{ message.budget }}</p>
+    {% endif %}
+
+    <hr>
+
+    <p><strong>Message:</strong></p>
+    <p>{{ message.body|linebreaks }}</p>
+
+    <hr>
+
+    <p>
+        Submitted on {{ message.created|date:"M d, Y H:i" }}
+    </p>
+</body>
+</html>

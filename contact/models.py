@@ -21,3 +21,19 @@ class Message(models.Model):
 
     def __str__(self):
         return f"Message from {self.name}"
+
+class ContactSettings(models.Model):
+    sender_name = models.CharField(
+        max_length=100,
+        default="Osama Abdullah",
+        help_text="Name displayed as the sender in emails"
+    )
+    recipient_email = models.EmailField(default="abdullah21673@hotmail.com")
+    sender_email = models.EmailField(default="osama2kabdullah@gmail.com")
+
+    def __str__(self):
+        return f"Contact Settings: {self.sender_email} → {self.recipient_email}"
+
+    class Meta:
+        verbose_name = "Contact Settings"
+        verbose_name_plural = "Contact Settings"

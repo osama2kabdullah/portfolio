@@ -1,0 +1,17 @@
+New Contact Form Submission
+
+Name: {{ message.name }}
+Email: {{ message.email }}
+
+{% if message.service %}
+Service: {{ message.service }}
+{% endif %}
+
+{% if message.budget %}
+Budget: ${{ message.budget }}
+{% endif %}
+
+Message:
+{{ message.body }}
+
+Submitted on {{ message.created }}
