@@ -1,5 +1,5 @@
 from django.db import models
-from portfolio.models import Client, Project
+from projects.models import Client, Project
 from django.utils import timezone
 
 class Testimonial(models.Model):

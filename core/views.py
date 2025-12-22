@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from portfolio.models import Project, Skill
+from projects.models import Project, Skill
 from blog.models import Post
 from services.models import Service
 from testimonials.models import Testimonial

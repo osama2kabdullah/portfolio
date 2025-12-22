@@ -27,7 +27,7 @@ from contact.models import Message
 from core.models import SiteSettings
 
 # PORTFOLIO
-from portfolio.models import (
+from projects.models import (
     Skill, Client, Project, ProjectSection, ProjectImage
 )
 

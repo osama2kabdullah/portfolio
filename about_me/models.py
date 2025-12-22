@@ -1,6 +1,6 @@
 from django.db import models
 from datetime import date
-from portfolio.models import Skill
+from projects.models import Skill
 
 class Profile(models.Model):
     full_name = models.CharField(max_length=100)

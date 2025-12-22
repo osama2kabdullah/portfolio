@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
 from core.models import SiteSettings
-from portfolio.models import Skill, Project
+from projects.models import Skill, Project
 from blog.models import Post, Category, Tag
 from contact.models import Message
 from services.models import Service

@@ -1,5 +1,5 @@
 from django import forms
-from portfolio.models import Project, Skill
+from projects.models import Project, Skill
 from blog.models import Post
 from contact.models import Message
 from core.models import SiteSettings

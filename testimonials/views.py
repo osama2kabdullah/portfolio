@@ -4,7 +4,7 @@ from django.urls import reverse
 from portfolio_site.utils import render_thanks
 from .models import Testimonial
 from .forms import TestimonialSubmissionForm
-from portfolio.models import Project
+from projects.models import Project
 
 
 def testimonials_list(request):

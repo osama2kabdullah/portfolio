@@ -7,7 +7,7 @@ except Exception:
     Faker = None
 import random
 
-from portfolio.models import Skill, Client, Project, ProjectSection
+from projects.models import Skill, Client, Project, ProjectSection
 from services.models import Service
 from testimonials.models import Testimonial
 from contact.models import Message

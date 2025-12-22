@@ -1,6 +1,6 @@
 from django import forms
 from .models import Testimonial
-from portfolio.models import Client, Project
+from projects.models import Client, Project
 
 
 class TestimonialSubmissionForm(forms.ModelForm):
