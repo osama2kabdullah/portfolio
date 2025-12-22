@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic import RedirectView
+from debug_toolbar.toolbar import debug_toolbar_urls
 
 urlpatterns = [
     path("original-admin/", admin.site.urls),
@@ -12,4 +12,4 @@ urlpatterns = [
     path("about/", include("about_me.urls")),
     path("testimonials/", include("testimonials.urls")),
     path('admin/', include(('dashboard.urls', 'dashboard'), namespace='dashboard')),
-]
+]+ debug_toolbar_urls()
