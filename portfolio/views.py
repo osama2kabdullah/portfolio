@@ -8,6 +8,7 @@ from testimonials.models import Testimonial
 
 def project_list(request):
     qs = Project.objects.filter(published=True).order_by("-created")
+    total_projects_count = qs.count()
 
     selected_service = request.GET.get("service")
     if selected_service:
@@ -28,6 +29,7 @@ def project_list(request):
             "projects": projects,
             "filters": filters,
             "selected_service": selected_service,
+            "total_projects_count": total_projects_count,
         },
     )
 

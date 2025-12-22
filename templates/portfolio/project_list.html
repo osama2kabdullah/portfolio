@@ -16,7 +16,7 @@
 
 <!-- FILTER BAR -->
 <div class="filter-bar">
-  <a href="{% url 'project_list' %}" class="filter_link {% if not selected_service %}active{% endif %}">All ({{ projects.paginator.count }})</a>
+  <a href="{% url 'project_list' %}" class="filter_link {% if not selected_service %}active{% endif %}">All ({{ total_projects_count }})</a>
   {% for service in filters %}
     <a href="?service={{ service.slug }}" 
        class="filter_link {% if service.slug == selected_service %}active{% endif %}">

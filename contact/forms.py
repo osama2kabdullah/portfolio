@@ -7,7 +7,8 @@ class ContactForm(forms.ModelForm):
     service = forms.ModelChoiceField(
         queryset=Service.objects.filter(published=True),
         empty_label="-- Select Service --",
-        widget=forms.Select(attrs={"class": "form-control"})
+        widget=forms.Select(attrs={"class": "form-control"}),
+        required=False
     )
 
     class Meta:

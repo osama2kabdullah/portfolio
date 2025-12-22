@@ -3,7 +3,7 @@ from django.urls import path, include
 from django.views.generic import RedirectView
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path("original-admin/", admin.site.urls),
     path("", include("core.urls")),
     path("portfolio/", include("portfolio.urls")),
     path("blog/", include("blog.urls")),
@@ -11,6 +11,6 @@ urlpatterns = [
     path("services/", include("services.urls")),
     path("about/", include("about_me.urls")),
     path("testimonials/", include("testimonials.urls")),
-    path("dashboard/", include("dashboard.urls")),
+    path('admin/', include(('dashboard.urls', 'dashboard'), namespace='dashboard')),
     path("favicon.ico", RedirectView.as_view(url="/static/favicon.ico", permanent=True)),
 ]

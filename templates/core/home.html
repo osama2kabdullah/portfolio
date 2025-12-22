@@ -47,14 +47,11 @@ Alex | Digital Craftsman
 
     <!-- Skills Box -->
     <div class="bento-box box-skill">
-      <h3>Tech Stack</h3>
+      <h3>Skills</h3>
       <div class="skill-list">
-        <span class="skill-pill">React</span>
-        <span class="skill-pill">Next.js</span>
-        <span class="skill-pill">GSAP</span>
-        <span class="skill-pill">WebGL</span>
-        <span class="skill-pill">Node.js</span>
-        <span class="skill-pill">Supabase</span>
+        {% for skill in Skills %}
+        <span class="skill-pill">{{ skill.name }}</span>
+        {% endfor %}
       </div>
     </div>
 
@@ -63,7 +60,7 @@ Alex | Digital Craftsman
       <h3 style="font-size: 3rem; color: var(--primary)">5+</h3>
       <p style="margin: 0">Years of Exp.</p>
       <h3 style="font-size: 3rem; color: var(--primary); margin-top: 10px">
-        40+
+        {{ project_count }}+
       </h3>
       <p style="margin: 0">Projects Shipped</p>
     </div>

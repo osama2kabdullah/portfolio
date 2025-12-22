@@ -3,6 +3,21 @@ from portfolio.models import Project, Skill
 from blog.models import Post
 from contact.models import Message
 from core.models import SiteSettings
+from django.contrib.auth.forms import SetPasswordForm
+
+class CustomSetPasswordForm(SetPasswordForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['new_password1'].widget.attrs.update({
+            'class': 'form-input',
+            'placeholder': '••••••••',
+            'id': 'new_password1'
+        })
+        self.fields['new_password2'].widget.attrs.update({
+            'class': 'form-input',
+            'placeholder': '••••••••',
+            'id': 'new_password2'
+        })
 
 
 class ProjectForm(forms.ModelForm):

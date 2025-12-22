@@ -7,8 +7,9 @@ from testimonials.models import Testimonial
 
 def home(request):
     projects = Project.objects.filter(published=True).order_by("-created")[:6]
+    project_count = Project.objects.count()
     skills = Skill.objects.order_by("-level")[:12]
     posts = Post.objects.filter(published=True).order_by("-created")[:3]
     services = Service.objects.filter(published=True).order_by("order")[:8]
     testimonials = Testimonial.objects.filter(approved=True, featured=True).order_by("-order")[:1]
-    return render(request, "core/home.html", {"projects": projects, "skills": skills, "posts": posts, "services": services, "testimonials": testimonials})
+    return render(request, "core/home.html", {"projects": projects, "project_count": project_count, "skills": skills, "posts": posts, "services": services, "testimonials": testimonials})
