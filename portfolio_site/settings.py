@@ -10,7 +10,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app']
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -58,7 +58,7 @@ TEMPLATES = [
     }
 ]
 
-WSGI_APPLICATION = "portfolio_site.wsgi.application"
+WSGI_APPLICATION = "portfolio_site.wsgi.app"
 
 DATABASES = {
     "default": {
