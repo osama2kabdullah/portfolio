@@ -12,6 +12,7 @@ class CoreValueInline(admin.TabularInline):
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ("full_name", "is_active")
+    filter_horizontal = ("skills",)
     inlines = [JourneyInline, CoreValueInline]
 
 @admin.register(AboutSettings)

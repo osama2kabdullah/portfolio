@@ -9,7 +9,7 @@ def home(request):
     profile = Profile.objects.filter(is_active=True).first()
     projects = Project.objects.filter(published=True).order_by("-created")[:6]
     project_count = Project.objects.count()
-    skills = Skill.objects.order_by("-level")[:12]
+    skills = profile.skills.order_by("-level")
     posts = Post.objects.filter(published=True).order_by("-created")[:3]
     services = Service.objects.filter(published=True).order_by("order")[:8]
     testimonials = Testimonial.objects.filter(approved=True, featured=True).order_by("-order")[:1]

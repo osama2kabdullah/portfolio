@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import date
+from portfolio.models import Skill
 
 class Profile(models.Model):
     full_name = models.CharField(max_length=100)
@@ -15,6 +16,12 @@ class Profile(models.Model):
         upload_to="profile/",
         blank=True,
         null=True
+    )
+
+    skills = models.ManyToManyField(
+        Skill,
+        blank=True,
+        related_name="profiles"
     )
 
     is_active = models.BooleanField(default=True)
