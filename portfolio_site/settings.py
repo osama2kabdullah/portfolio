@@ -8,9 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
-DEBUG = False
-if os.environ.get("DJANGO_DEBUG") == "True":
-    DEBUG = True
+DEBUG = os.environ.get("DJANGO_DEBUG", "False").strip().lower() in ["true", "1", "yes"]
 
 ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app', 'localhost']
 
