@@ -5,5 +5,6 @@
       "src": "/(.*)",
       "dest": "portfolio_site/wsgi.py"
     }
-  ]
+  ],
+  "outputDirectory": ""
 }
