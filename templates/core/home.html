@@ -49,11 +49,11 @@ Alex | Digital Craftsman
     </div>
 
     <!-- Skills Box -->
-    <div class="bento-box box-skill">
+    <div style="justify-content: flex-start;" class="bento-box box-skill">
       <h3>Skills</h3>
-      {% if profile.skills %}
+      {% if profile.skills.all %}
       <div class="skill-list">
-        {% for skill in profile.skills %}
+        {% for skill in profile.skills.all %}
         <span class="skill-pill">{{ skill.name }}</span>
         {% endfor %}
       </div>
