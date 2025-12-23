@@ -5,7 +5,8 @@
       "src": "portfolio_site/wsgi.py",
       "use": "@vercel/python",
       "config": {
-        "maxLambdaSize": "50mb"
+        "installCommand": "pip install -r requirements.txt",
+        "buildCommand": "python manage.py migrate --noinput && python manage.py collectstatic --noinput"
       }
     }
   ],
