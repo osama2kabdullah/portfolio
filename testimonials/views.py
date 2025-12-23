@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.urls import reverse
 from portfolio_site.utils import render_thanks
-from .models import Testimonial
+from .models import Testimonial, TestimonialPageSettings
 from .forms import TestimonialSubmissionForm
 from projects.models import Project
 from django.core.mail import EmailMultiAlternatives
@@ -111,13 +111,15 @@ def testimonial_submit(request):
     else:
         form = TestimonialSubmissionForm(project=project)
 
+    page_settings = TestimonialPageSettings.objects.first()
     return render(
         request,
         "testimonials/testimonial_submit.html",
-        {"form": form, "project": project},
+        {"form": form, "project": project, "page_settings": page_settings, "show_footer_contact": False,},
     )
 
 def testimonial_thanks(request):
+    page_settings = TestimonialPageSettings.objects.first()
     project_slug = request.GET.get("project") or request.session.get("project")
     project = None
     if project_slug:
@@ -131,11 +133,11 @@ def testimonial_thanks(request):
         session_key="testimonial_submitted",
         redirect_url="testimonials_list",
         extra_context={
-            "show_footer_contact": False,
-            "title": f"Thank You{f' – {project.title}' if project else ''}",
-            "heading": "Thank You for Your Testimonial",
-            "subheading": "Testimonial Received",
-            "message": "Your testimonial has been received and will appear on the site after approval.",
+            "show_footer_contact": True,
+            "title": page_settings.thanks_title if page_settings else f"Thank You{f' – {project.title}' if project else ''}",
+            "heading": page_settings.thanks_title if page_settings else "Thank You for Your Testimonial",
+            "subheading": page_settings.thanks_subheading if page_settings else "Testimonial Received",
+            "message": page_settings.thanks_message if page_settings else "Your testimonial has been received and will appear on the site after approval.",
             "project": project,
         },
     )

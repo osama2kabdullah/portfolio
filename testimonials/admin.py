@@ -1,6 +1,11 @@
 from django.contrib import admin
-from .models import Testimonial
+from .models import Testimonial, TestimonialPageSettings
 
+@admin.register(TestimonialPageSettings)
+class TestimonialPageSettingsAdmin(admin.ModelAdmin):
+    def has_add_permission(self, request):
+        # Only allow one instance
+        return not TestimonialPageSettings.objects.exists()
 
 @admin.register(Testimonial)
 class TestimonialAdmin(admin.ModelAdmin):

@@ -10,11 +10,11 @@
   <div class="section-title" style="justify-content: center;">Share Your Experience</div>
   
   <h1 class="display-text">
-      Leave a Testimonial for AlexDev.
+      {{ page_settings.submit_heading }}
   </h1>
 
   <p>
-      Your honest feedback is invaluable. If you've enjoyed working together, please take a moment to share your experience with others. Thank you for being a fantastic client!
+      {{ page_settings.submit_subheading }}
   </p>
 </header>
 
@@ -44,7 +44,7 @@
       </div>
   
       <div class="form-group">
-          <label>Email Address (private)</label>
+          <label>Email Address (will be kept private)</label>
           <input
               type="email"
               name="email"

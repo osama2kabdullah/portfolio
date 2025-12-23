@@ -23,3 +23,23 @@ class Testimonial(models.Model):
 
     def __str__(self):
         return f"{self.name} — {self.company or ''}"
+
+class TestimonialPageSettings(models.Model):
+    """
+    Singleton model to store dynamic text for testimonial pages.
+    """
+    # Submission page
+    submit_heading = models.CharField(max_length=200, default="Leave a Testimonial for AlexDev")
+    submit_subheading = models.TextField(default="Your honest feedback is invaluable. Thank you for being a fantastic client!")
+    
+    # Thank you page
+    thanks_title = models.CharField(max_length=200, default="Thank You for Your Testimonial")
+    thanks_subheading = models.CharField(max_length=200, default="Testimonial Received")
+    thanks_message = models.TextField(default="Your testimonial has been received and will appear on the site after approval.")
+    
+    def __str__(self):
+        return "Testimonial Page Settings"
+
+    class Meta:
+        verbose_name = "Testimonial Page Settings"
+        verbose_name_plural = "Testimonial Page Settings"

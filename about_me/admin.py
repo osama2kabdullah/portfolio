@@ -9,16 +9,16 @@ class CoreValueInline(admin.TabularInline):
     model = CoreValue
     extra = 1
 
-@admin.register(Profile)
-class ProfileAdmin(admin.ModelAdmin):
-    list_display = ("full_name", "is_active")
-    filter_horizontal = ("skills",)
-    inlines = [JourneyInline, CoreValueInline]
-
 class SocialLinkInline(admin.TabularInline):
     model = SocialLink
     extra = 1
     ordering = ("order",)
+
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ("full_name", "is_active")
+    filter_horizontal = ("skills",)
+    inlines = [SocialLinkInline, JourneyInline, CoreValueInline]
 
 @admin.register(AboutSettings)
 class AboutSettingsAdmin(admin.ModelAdmin):

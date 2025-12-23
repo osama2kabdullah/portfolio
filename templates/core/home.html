@@ -51,11 +51,17 @@ Alex | Digital Craftsman
     <!-- Skills Box -->
     <div class="bento-box box-skill">
       <h3>Skills</h3>
+      {% if profile.skills %}
       <div class="skill-list">
-        {% for skill in skills %}
+        {% for skill in profile.skills %}
         <span class="skill-pill">{{ skill.name }}</span>
         {% endfor %}
       </div>
+      {% else %}
+      <span style="font-size: 0.8rem; color: var(--text-muted)">
+        No Skill Added From Admin
+      </span>
+      {% endif %}
     </div>
 
     <!-- Stats Box -->

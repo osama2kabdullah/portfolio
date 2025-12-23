@@ -63,6 +63,14 @@
 
       <div style="display: flex; justify-content: space-between; padding-bottom: 40px; font-size: 0.9rem; color: var(--text-muted);">
         <div>{{ site_settings.footer_text|default:"© 2025 Your Name" }}</div>
+
+        {% if social_links %}
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+          {% for link in social_links %}
+            <a href="{{ link.url }}" target="_blank">{{ link.platform_name }}</a>
+          {% endfor %}
+        </div>
+        {% endif %}
       </div>
     </footer>
   </main>
