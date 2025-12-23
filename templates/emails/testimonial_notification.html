@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>New Testimonial Submitted</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    <h2>New Testimonial Submitted</h2>
+
+```
+<p>A new testimonial has been submitted on your portfolio website.</p>
+
+<h3>Details</h3>
+<ul>
+    <li><strong>Name:</strong> {{ testimonial.name }}</li>
+    <li><strong>Email:</strong> {{ testimonial.email|default:"Not provided" }}</li>
+    <li><strong>Company:</strong> {{ testimonial.company|default:"Not provided" }}</li>
+    <li><strong>Role:</strong> {{ testimonial.role|default:"Not provided" }}</li>
+    {% if project %}
+        <li><strong>Project:</strong> {{ project.title }}</li>
+    {% else %}
+        <li><strong>Project:</strong> Not specified</li>
+    {% endif %}
+</ul>
+
+<h3>Testimonial</h3>
+<blockquote style="border-left: 4px solid #ddd; padding-left: 12px; color: #555;">
+    {{ testimonial.body }}
+</blockquote>
+
+<p>
+    This testimonial is <strong>pending approval</strong>.<br>
+    Please review it in the Django admin panel.
+</p>
+```
+
+</body>
+</html>

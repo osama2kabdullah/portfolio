@@ -1,0 +1,16 @@
+Hi {{ testimonial.name }},
+
+Thank you very much for taking the time to share your experience.
+Your testimonial has been received successfully.
+
+{% if project %}
+It is associated with the project:
+“{{ project.title }}”
+{% endif %}
+
+Before it appears on the website, it will be reviewed for approval.
+
+I truly appreciate your support and kind words.
+
+Best regards,
+{{ sender_name|default:"Portfolio Website" }}

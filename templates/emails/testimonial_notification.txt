@@ -1,0 +1,29 @@
+A new testimonial has been submitted on your portfolio website.
+
+Name:
+{{ testimonial.name }}
+
+Email:
+{{ testimonial.email|default:"Not provided" }}
+
+Company:
+{{ testimonial.company|default:"Not provided" }}
+
+Role:
+{{ testimonial.role|default:"Not provided" }}
+
+{% if project %}
+Project:
+{{ project.title }}
+{% else %}
+Project:
+Not specified
+{% endif %}
+
+Testimonial:
+{{ testimonial.body }}
+
+---
+
+This testimonial is pending approval.
+You can review and approve it from the Django admin panel.

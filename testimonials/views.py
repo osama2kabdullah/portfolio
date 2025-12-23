@@ -5,7 +5,10 @@ from portfolio_site.utils import render_thanks
 from .models import Testimonial
 from .forms import TestimonialSubmissionForm
 from projects.models import Project
-
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.conf import settings
+from contact.models import ContactSettings
 
 def testimonials_list(request):
     qs = Testimonial.objects.filter(approved=True).order_by("-featured", "order")
@@ -24,7 +27,76 @@ def testimonial_submit(request):
     if request.method == "POST":
         form = TestimonialSubmissionForm(request.POST, project=project)
         if form.is_valid():
-            saved_testimonial = form.save()
+            testimonial = form.save()
+
+            # =============================
+            # EMAIL SETTINGS (shared logic)
+            # =============================
+            settings_obj = ContactSettings.objects.first()
+            if settings_obj:
+                sender_email = settings_obj.sender_email or settings.EMAIL_HOST_USER
+                sender_name = settings_obj.sender_name or "Portfolio Website"
+                recipient_email = settings_obj.recipient_email or settings.EMAIL_HOST_USER
+            else:
+                sender_email = settings.EMAIL_HOST_USER
+                sender_name = "Portfolio Website"
+                recipient_email = settings.EMAIL_HOST_USER
+
+            # =============================
+            # 1️⃣ ADMIN NOTIFICATION
+            # =============================
+            subject_admin = f"New Testimonial — {testimonial.project.title}" if testimonial.project else "New Testimonial Submitted"
+            context_admin = {
+                "testimonial": testimonial,
+                "project": testimonial.project,
+            }
+
+            text_admin = render_to_string(
+                "emails/testimonial_notification.txt", context_admin
+            )
+            html_admin = render_to_string(
+                "emails/testimonial_notification.html", context_admin
+            )
+
+            email_admin = EmailMultiAlternatives(
+                subject=subject_admin,
+                body=text_admin,
+                from_email=f"{sender_name} <{sender_email}>",
+                to=[recipient_email],
+                reply_to=[testimonial.email] if testimonial.email else None,
+            )
+            email_admin.attach_alternative(html_admin, "text/html")
+            email_admin.send(fail_silently=False)
+
+            # =============================
+            # 2️⃣ AUTO-REPLY TO SUBMITTER
+            # =============================
+            if testimonial.email:
+                subject_user = "Thank you for your testimonial!"
+                context_user = {
+                    "testimonial": testimonial,
+                    "project": testimonial.project,
+                }
+
+                text_user = render_to_string(
+                    "emails/testimonial_autoreply.txt", context_user
+                )
+                html_user = render_to_string(
+                    "emails/testimonial_autoreply.html", context_user
+                )
+
+                email_user = EmailMultiAlternatives(
+                    subject=subject_user,
+                    body=text_user,
+                    from_email=f"{sender_name} <{sender_email}>",
+                    to=[testimonial.email],
+                )
+                email_user.attach_alternative(html_user, "text/html")
+                email_user.send(fail_silently=False)
+
+            # =============================
+            # SESSION + REDIRECT (unchanged)
+            # =============================
             request.session["testimonial_submitted"] = True
 
             if not project_slug:

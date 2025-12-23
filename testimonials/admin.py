@@ -4,34 +4,16 @@ from .models import Testimonial
 
 @admin.register(Testimonial)
 class TestimonialAdmin(admin.ModelAdmin):
-    list_display = (
-        "name",
-        "company",
-        "role",
-        "project",
-        "approved",
-        "featured",
-        "order",
-    )
-
-    list_filter = (
-        "approved",
-        "featured",
-        "project",
-    )
-
-    search_fields = (
-        "name",
-        "company",
-        "role",
-        "body",
-    )
-
-    ordering = ("-featured", "order")
-
-    list_editable = ("approved", "featured", "order")
-
+    list_display = ("name","project","approved",)
+    list_filter = ("approved","featured","project",)
+    search_fields = ("name","company","role","body",)
+    ordering = ("-featured", "order",)
+    list_editable = ("approved",)
+    readonly_fields = ("name","client", "email", "company","role","project","body",)
     actions = ["approve_testimonials", "decline_testimonials"]
+
+    def has_add_permission(self, request):
+        return False
 
     def approve_testimonials(self, request, queryset):
         updated = queryset.update(approved=True)
