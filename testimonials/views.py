@@ -9,6 +9,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf import settings
 from contact.models import ContactSettings
+from portfolio_site.utils import send_resend_email_async
 
 def testimonials_list(request):
     qs = Testimonial.objects.filter(approved=True).order_by("-featured", "order")
@@ -29,23 +30,23 @@ def testimonial_submit(request):
         if form.is_valid():
             testimonial = form.save()
 
-            # =============================
-            # EMAIL SETTINGS (shared logic)
-            # =============================
             settings_obj = ContactSettings.objects.first()
-            if settings_obj:
-                sender_email = settings_obj.sender_email or settings.EMAIL_HOST_USER
-                sender_name = settings_obj.sender_name or "Portfolio Website"
-                recipient_email = settings_obj.recipient_email or settings.EMAIL_HOST_USER
-            else:
-                sender_email = settings.EMAIL_HOST_USER
-                sender_name = "Portfolio Website"
-                recipient_email = settings.EMAIL_HOST_USER
+            sender_name = settings_obj.sender_name or "Portfolio Website"
+            recipient_email = (
+                settings_obj.recipient_email
+                if settings_obj and settings_obj.recipient_email
+                else settings.RESEND_FROM_EMAIL
+            )
 
             # =============================
             # 1️⃣ ADMIN NOTIFICATION
             # =============================
-            subject_admin = f"New Testimonial — {testimonial.project.title}" if testimonial.project else "New Testimonial Submitted"
+            subject_admin = (
+                f"New Testimonial — {testimonial.project.title}"
+                if testimonial.project
+                else "New Testimonial Submitted"
+            )
+
             context_admin = {
                 "testimonial": testimonial,
                 "project": testimonial.project,
@@ -58,15 +59,14 @@ def testimonial_submit(request):
                 "emails/testimonial_notification.html", context_admin
             )
 
-            email_admin = EmailMultiAlternatives(
+            send_resend_email_async(
                 subject=subject_admin,
-                body=text_admin,
-                from_email=f"{sender_name} <{sender_email}>",
                 to=[recipient_email],
-                reply_to=[testimonial.email] if testimonial.email else None,
+                text=text_admin,
+                html=html_admin,
+                reply_to=testimonial.email,
+                sender_name=sender_name,
             )
-            email_admin.attach_alternative(html_admin, "text/html")
-            email_admin.send(fail_silently=False)
 
             # =============================
             # 2️⃣ AUTO-REPLY TO SUBMITTER
@@ -85,18 +85,14 @@ def testimonial_submit(request):
                     "emails/testimonial_autoreply.html", context_user
                 )
 
-                email_user = EmailMultiAlternatives(
+                send_resend_email_async(
                     subject=subject_user,
-                    body=text_user,
-                    from_email=f"{sender_name} <{sender_email}>",
                     to=[testimonial.email],
+                    text=text_user,
+                    html=html_user,
+                    sender_name=sender_name,
                 )
-                email_user.attach_alternative(html_user, "text/html")
-                email_user.send(fail_silently=False)
 
-            # =============================
-            # SESSION + REDIRECT (unchanged)
-            # =============================
             request.session["testimonial_submitted"] = True
 
             if not project_slug:
@@ -106,7 +102,9 @@ def testimonial_submit(request):
                     request.session["project"] = project_slug
 
             if project_slug:
-                return redirect(f"{reverse('testimonial_thanks')}?project={project_slug}")
+                return redirect(
+                    f"{reverse('testimonial_thanks')}?project={project_slug}"
+                )
             return redirect("testimonial_thanks")
     else:
         form = TestimonialSubmissionForm(project=project)
@@ -115,7 +113,12 @@ def testimonial_submit(request):
     return render(
         request,
         "testimonials/testimonial_submit.html",
-        {"form": form, "project": project, "page_settings": page_settings, "show_footer_contact": False,},
+        {
+            "form": form,
+            "project": project,
+            "page_settings": page_settings,
+            "show_footer_contact": False,
+        },
     )
 
 def testimonial_thanks(request):
