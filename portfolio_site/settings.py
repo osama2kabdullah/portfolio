@@ -1,7 +1,7 @@
 from pathlib import Path
 import os
-from dotenv import load_dotenv
-load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
 
 # Base dir
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -103,25 +103,12 @@ LOGIN_URL = '/admin/login/'
 LOGIN_REDIRECT_URL = '/admin/'
 LOGOUT_REDIRECT_URL = '/admin/login/'
 
-SUPABASE_URL = os.getenv('SUPABASE_URL')
-SUPABASE_SERVICE_KEY = os.getenv('SUPABASE_SERVICE_ROLE_KEY')
-SUPABASE_BUCKET = os.getenv('SUPABASE_BUCKET')
-
-DEFAULT_FILE_STORAGE = "core.storage.supabase.SupabaseStorage"
-
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+MEDIA_URL = '/media/'
+MEDIA_ROOT = Path("/home/abdul/portfolio_media")
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
-STORAGES = {
-    "default": {
-        "BACKEND": DEFAULT_FILE_STORAGE,
-    },
-    "staticfiles": {
-        "BACKEND": STATICFILES_STORAGE,
-    },
-}
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
