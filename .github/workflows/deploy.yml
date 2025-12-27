@@ -20,7 +20,7 @@ jobs:
 
     - name: Deploy to server
       run: |
-        ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} -p {{ secrets.SSH_PORT }} << 'EOF'
+        ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} -p ${{ secrets.SSH_PORT }} << 'EOF'
           cd /home/abdul/apps/portfolio_site/portfolio
           git reset --hard
           git pull origin master
