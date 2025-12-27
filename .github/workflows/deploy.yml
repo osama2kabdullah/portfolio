@@ -20,7 +20,8 @@ jobs:
 
     - name: Deploy to server
       run: |
-        ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} -p ${{ secrets.SSH_PORT }} << 'EOF'
+        ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} \
+        ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
           cd /home/abdul/apps/portfolio_site/portfolio
           git reset --hard
           git pull origin master
