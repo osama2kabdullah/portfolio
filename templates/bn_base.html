@@ -1,0 +1,52 @@
+{% load static %}
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  
+  <title>{% if site_settings.meta_title %}{{ site_settings.meta_title }}{% else %}{{ site_settings.site_title }}{% endif %}</title>
+  <meta name="description" content="{{ site_settings.meta_description }}">
+  <meta property="og:title" content="{{ site_settings.og_title|default:site_settings.site_title }}">
+  <meta property="og:description" content="{{ site_settings.og_description|default:site_settings.meta_description }}">
+  {% if site_settings.og_image %}<meta property="og:image" content="{{ site_settings.og_image.url }}">{% endif %}
+  <meta name="twitter:card" content="{{ site_settings.twitter_card }}">
+  {% if site_settings.favicon %}
+    <link rel="icon" href="{{ site_settings.favicon.url }}" type="image/png">
+    <link rel="shortcut icon" href="{{ site_settings.favicon.url }}">
+    <link rel="apple-touch-icon" href="{{ site_settings.favicon.url }}">
+  {% endif %}
+
+  <!-- Fonts & CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="{% static 'css/bn_base.css' %}">
+  {% block css %}{% endblock %}
+</head>
+<body>
+
+  <div class="bg-glow" style="top: -100px; right: -100px;"></div>
+  <div class="bg-glow" style="bottom: -200px; left: -100px; opacity: 0.5;"></div>
+
+  <nav>
+      <a href="#" class="logo">Osama<span>Abdullah.</span></a>
+      <div class="nav-links">
+          <a href="#services">সার্ভিস</a>
+          <a href="#portfolio">পোর্টফোলিও</a>
+          <a href="#pricing">প্যাকেজ</a>
+          <a href="#scheduler">মিটিং</a>
+          <a href="#about">অভিজ্ঞতা</a>
+          <a href="#contact">যোগাযোগ</a>
+      </div>
+  </nav>
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+      <p>&copy; ২০২৫ ওসামা আবদুল্লাহ। সিনিয়র শপিফাই ডেভেলপার।</p>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,82 @@
+:root {
+    --shopify-green: #95bf47;
+    --shopify-accent: #008060;
+    --dark-bg: #05070a;
+    --card-bg: rgba(15, 20, 30, 0.8);
+    --text-light: #f3f4f6;
+    --text-muted: #9ca3af;
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glow: rgba(149, 191, 71, 0.15);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Hind Siliguri', 'Poppins', sans-serif;
+    background-color: var(--dark-bg);
+    color: var(--text-light);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Background Gradients */
+.bg-glow {
+    position: fixed;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: -1;
+    filter: blur(120px);
+    pointer-events: none;
+}
+
+/* Navbar */
+nav {
+    padding: 1.2rem 8%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(5, 7, 10, 0.95);
+    backdrop-filter: blur(20px);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.logo {
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--text-light);
+    text-decoration: none;
+}
+
+.logo span { color: var(--shopify-green); }
+
+.nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-left: 2rem;
+    font-weight: 500;
+    transition: 0.3s;
+    font-size: 0.9rem;
+}
+
+.nav-links a:hover { color: var(--shopify-green); }
+
+footer {
+    padding: 40px 8%;
+    text-align: center;
+    border-top: 1px solid var(--glass-border);
+    color: var(--text-muted);
+}
+
+@media (max-width: 992px) {
+}

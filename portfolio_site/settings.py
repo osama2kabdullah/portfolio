@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "testimonials",
     "about_me",
     "debug_toolbar",
+    "bn",
 ]
 
 MIDDLEWARE = [
