@@ -1,75 +1,53 @@
 from django.shortcuts import render, redirect
-from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
 from portfolio_site.utils import render_thanks
 from .forms import ContactForm
-from .models import ContactSettings
-from portfolio_site.utils import send_resend_email_async
+from .services import handle_contact_submission
 
 def contact_view(request):
+    form_config = {
+        "name": {
+            "label": "Your Full Name*",
+            "placeholder": "e.g. John Doe",
+        },
+        "email": {
+            "label": "Work Email*",
+            "placeholder": "name@company.com",
+        },
+        "service": {
+            "label": "What service are you interested in?",
+        },
+        "budget": {
+            "label": "Estimated Budget Range (BDT)*",
+            "placeholder": "e.g. 50000",
+        },
+        "body": {
+            "label": "Project Details / Goals*",
+            "placeholder": "Tell me about your project...",
+        },
+    }
+
     if request.method == "POST":
-        form = ContactForm(request.POST)
+        form = ContactForm(request.POST, config=form_config)
         if form.is_valid():
-            message = form.save()
-
-            settings_obj = ContactSettings.objects.first()
-            sender_name = settings_obj.sender_name or "Portfolio Website"
-            recipient_email = (
-                settings_obj.recipient_email
-                if settings_obj and settings_obj.recipient_email
-                else settings.RESEND_FROM_EMAIL
+            handle_contact_submission(
+                form=form,
+                request=request,
+                admin_subject="New Contact Message",
+                admin_templates={
+                    "text": "emails/contact_notification.txt",
+                    "html": "emails/contact_notification.html",
+                },
+                user_subject="Thank you for contacting me!",
+                user_templates={
+                    "text": "emails/contact_autoreply.txt",
+                    "html": "emails/contact_autoreply.html",
+                },
             )
-
-            # Get ContactSettings singleton
-            subject_admin = "New Contact Message from Portfolio Website"
-            context_admin = {"message": message}
-
-            text_admin = render_to_string(
-                "emails/contact_notification.txt", context_admin
-            )
-            html_admin = render_to_string(
-                "emails/contact_notification.html", context_admin
-            )
-
-            send_resend_email_async(
-                subject=subject_admin,
-                to=[recipient_email],
-                text=text_admin,
-                html=html_admin,
-                reply_to=message.email,
-                sender_name=sender_name,
-            )
-
-            # 2️⃣ Auto-reply to user
-            subject_user = "Thank you for contacting me!"
-            context_user = {"message": message}
-
-            text_user = render_to_string(
-                "emails/contact_autoreply.txt", context_user
-            )
-            html_user = render_to_string(
-                "emails/contact_autoreply.html", context_user
-            )
-
-            send_resend_email_async(
-                subject=subject_user,
-                to=[message.email],
-                text=text_user,
-                html=html_user,
-                sender_name=sender_name,
-            )
-
-            request.session["form_submitted"] = True
             return redirect("contact_thanks")
     else:
-        form = ContactForm()
+        form = ContactForm(config=form_config)
 
-    return render(
-        request,
-        "contact/contact.html",
-        {"form": form, "show_footer_contact": False},
-    )
+    return render(request, "contact/contact.html", {"form": form})
 
 def contact_thanks(request):
     return render_thanks(

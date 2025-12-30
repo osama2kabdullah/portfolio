@@ -9,7 +9,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf import settings
 from contact.models import ContactSettings
-from portfolio_site.utils import send_resend_email_async
+from portfolio_site.utils import send_django_email_async
 
 def testimonials_list(request):
     qs = Testimonial.objects.filter(approved=True).order_by("-featured", "order")
@@ -59,7 +59,7 @@ def testimonial_submit(request):
                 "emails/testimonial_notification.html", context_admin
             )
 
-            send_resend_email_async(
+            send_django_email_async(
                 subject=subject_admin,
                 to=[recipient_email],
                 text=text_admin,
@@ -85,7 +85,7 @@ def testimonial_submit(request):
                     "emails/testimonial_autoreply.html", context_user
                 )
 
-                send_resend_email_async(
+                send_django_email_async(
                     subject=subject_user,
                     to=[testimonial.email],
                     text=text_user,

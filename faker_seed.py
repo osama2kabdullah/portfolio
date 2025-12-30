@@ -1,288 +1,227 @@
 import os
 import django
 
-# --------------------------------------------------
-# DJANGO BOOTSTRAP (REQUIRED FOR ROOT SCRIPTS)
-# --------------------------------------------------
+# DJANGO BOOTSTRAP
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "portfolio_site.settings")
 django.setup()
 
-# --------------------------------------------------
-# IMPORTS (SAFE AFTER django.setup())
-# --------------------------------------------------
 from django.conf import settings
-from django.utils.text import slugify
+from django.apps import apps
 from django.contrib.auth import get_user_model
+from django.utils.text import slugify
 from faker import Faker
 import random
-from decimal import Decimal
+import uuid
+from decimal import Decimal, Decimal as D
+from django.db import IntegrityError, transaction
+from django.db import models as dj_models
 
-# BLOG
-from blog.models import Post, Category, Tag
 
-# CONTACT
-from contact.models import Message
+EXCLUDED_MODEL_LABELS = {
+    "contenttypes.contenttype",
+    "auth.permission",
+    "admin.logentry",
+    "sessions.session",
+    "django_migrations",
+}
 
-# CORE
-from core.models import SiteSettings
 
-# PORTFOLIO
-from projects.models import (
-    Skill, Client, Project, ProjectSection, ProjectImage
-)
+def safe_value_for_field(field, fake):
+    if isinstance(field, (dj_models.CharField, dj_models.SlugField)):
+        max_len = getattr(field, "max_length", 40) or 40
+        text = fake.sentence(nb_words=3).strip(".")
+        if len(text) > max_len:
+            text = text[: max_len - 4]
+        if isinstance(field, dj_models.SlugField):
+            return slugify(text)[:max_len]
+        return text[:max_len]
 
-# SERVICES
-from services.models import Service, Deliverable, ProcessStep
+    if isinstance(field, dj_models.TextField):
+        return "\n\n".join(fake.paragraphs(nb=3))
 
-# TESTIMONIALS
-from testimonials.models import Testimonial
+    if isinstance(field, dj_models.EmailField):
+        return fake.unique.email()
+
+    if isinstance(field, dj_models.URLField):
+        return fake.url()
+
+    if isinstance(field, dj_models.BooleanField):
+        return random.choice([True, False])
+
+    if isinstance(field, (dj_models.IntegerField, dj_models.SmallIntegerField, dj_models.PositiveIntegerField, dj_models.PositiveSmallIntegerField)):
+        return random.randint(0, 100)
+
+    if isinstance(field, dj_models.FloatField):
+        return random.random() * 100
+
+    if isinstance(field, dj_models.DecimalField):
+        max_digits = field.max_digits or 8
+        decimal_places = field.decimal_places or 2
+        value = Decimal(random.uniform(0, 10000)).quantize(D(("1." + "0" * decimal_places)))
+        return value
+
+    if isinstance(field, (dj_models.DateField,)):
+        return fake.date_this_decade(before_today=True, after_today=False)
+
+    if isinstance(field, (dj_models.DateTimeField,)):
+        return fake.date_time_this_decade(before_now=True, after_now=False)
+
+    if isinstance(field, dj_models.TimeField):
+        return fake.time()
+
+    # Fallback
+    return None
 
 
 def run():
-
     if not settings.DEBUG:
-        raise Exception("❌ Seeding blocked outside DEBUG mode")
+        raise Exception("Seeding blocked outside DEBUG mode. Set DEBUG=True to run this script.")
 
     fake = Faker()
     Faker.seed(2024)
+    random.seed(2024)
 
     User = get_user_model()
 
-    print("🧹 Clearing old data...")
+    print("Starting full-project seeding using Faker...")
 
-    # --- DELETE ORDER (IMPORTANT) ---
-    Message.objects.all().delete()
-    Testimonial.objects.all().delete()
-    ProjectImage.objects.all().delete()
-    ProjectSection.objects.all().delete()
-    Project.objects.all().delete()
-    Client.objects.all().delete()
-    Skill.objects.all().delete()
+    # Collect all managed, non-proxy models
+    all_models = [m for m in apps.get_models() if m._meta.managed and not m._meta.proxy]
+    # Filter obvious internal tables
+    all_models = [m for m in all_models if f"{m._meta.app_label}.{m._meta.model_name}" not in EXCLUDED_MODEL_LABELS]
 
-    Deliverable.objects.all().delete()
-    ProcessStep.objects.all().delete()
-    Service.objects.all().delete()
+    created = {}  # model -> list of instances
 
-    Post.objects.all().delete()
-    Category.objects.all().delete()
-    Tag.objects.all().delete()
+    # Clear tables (dangerous but intended for a dev DB)
+    print("Clearing existing data for managed models (skipping auth groups/permissions)...")
+    for m in reversed(all_models):
+        try:
+            m.objects.all().delete()
+        except Exception:
+            pass
 
-    User.objects.all().delete()
-    SiteSettings.objects.all().delete()
+    # Create a primary user
+    if not User.objects.filter(username="seed_user").exists():
+        try:
+            User.objects.create_superuser(username="seed_user", email="seed@example.com", password="password")
+        except Exception:
+            try:
+                User.objects.create_user(username="seed_user", email="seed@example.com", password="password")
+            except Exception:
+                pass
 
-    # -------------------------------
-    # USER (YOU)
-    # -------------------------------
-    user = User.objects.create_user(
-        username="osama",
-        email="osama2kabdullah@gmail.com",
-        password="123123",
-        first_name="Osama",
-        last_name="Abdullah",
-    )
+    # Helper to get existing instances for a model
+    def existing_for(model):
+        return created.get(model, list(model.objects.all()))
 
-    # -------------------------------
-    # SITE SETTINGS
-    # -------------------------------
-    SiteSettings.objects.create(
-        site_title="Osama Abdullah — Shopify Theme Developer",
-        tagline="High-performance Shopify themes & custom storefronts",
-        about=(
-            "I am Osama Abdullah, a Shopify Theme Developer with over 3 years "
-            "of experience building fast, conversion-focused Shopify stores. "
-            "I specialize in Liquid, Dawn theme customization, and scalable UI systems."
-        ),
-        contact_email="abdullah21673@hotmail.com",
-        github="https://github.com/osama2kabdullah",
-        linkedin="https://www.linkedin.com/in/md-abdullah-9121b5228",
-    )
+    # We'll perform multiple passes to satisfy FK ordering
+    pending = set(all_models)
+    max_passes = 6
+    pass_no = 0
+    while pending and pass_no < max_passes:
+        pass_no += 1
+        progressed = False
+        for model in list(pending):
+            model_label = f"{model._meta.app_label}.{model._meta.model_name}"
+            # Skip some builtins
+            if model_label in EXCLUDED_MODEL_LABELS:
+                pending.discard(model)
+                continue
 
-    # -------------------------------
-    # SKILLS
-    # -------------------------------
-    skill_names = [
-        "Shopify Theme Development",
-        "Liquid",
-        "HTML5",
-        "CSS3",
-        "JavaScript",
-        "Tailwind CSS",
-        "Shopify CLI",
-        "Performance Optimization",
-        "Storefront API",
-        "Git & GitHub",
-        "Shopify App Development",
-        "Python",
-        "Django",
-        "Flask",
-        "Node.js",
-        "SQL",
-        "PostgreSQL",
-    ]
+            # Try to create up to 5 instances per model
+            created.setdefault(model, [])
+            target_count = 5
+            to_create = target_count - len(existing_for(model))
+            if to_create <= 0:
+                pending.discard(model)
+                progressed = True
+                continue
 
-    skills = []
-    for i, name in enumerate(skill_names):
-        skills.append(
-            Skill.objects.create(
-                name=name,
-                level=random.randint(75, 95),
-                order=i,
-            )
-        )
+            can_create_any = False
+            for _ in range(to_create):
+                field_kwargs = {}
+                m2m_fields = []
+                skip = False
 
-    # -------------------------------
-    # SERVICES
-    # -------------------------------
-    service_titles = [
-        "Custom Shopify Theme Development",
-        "Shopify Theme Customization",
-        "Shopify Theme Update",
-        "Store Speed Optimization",
-        "Custom Website Build",
-        "Web Application Development",
-    ]
+                for field in model._meta.get_fields():
+                    # Skip auto / reverse relations
+                    if getattr(field, 'auto_created', False) and not getattr(field, 'concrete', True):
+                        continue
 
-    services = []
-    for i, title in enumerate(service_titles):
-        service = Service.objects.create(
-            title=title,
-            slug=slugify(title),
-            description=fake.paragraph(nb_sentences=4),
-            icon="shopify",
-            order=i,
-            published=True,
-        )
-        services.append(service)
+                    if isinstance(field, dj_models.ManyToManyField):
+                        m2m_fields.append(field)
+                        continue
 
-        for j in range(3):
-            Deliverable.objects.create(
-                service=service,
-                name=fake.sentence(nb_words=4),
-                order=j,
-            )
+                    if not getattr(field, 'editable', True) and not isinstance(field, dj_models.ForeignKey):
+                        continue
 
-        for j in range(3):
-            ProcessStep.objects.create(
-                service=service,
-                title=fake.sentence(nb_words=3),
-                description=fake.paragraph(nb_sentences=3),
-                order=j,
-            )
+                    if isinstance(field, dj_models.ForeignKey):
+                        rel_model = field.remote_field.model
+                        rel_instances = existing_for(rel_model)
+                        if rel_instances:
+                            field_kwargs[field.name] = random.choice(rel_instances)
+                        else:
+                            if field.null or field.blank:
+                                field_kwargs[field.name] = None
+                            else:
+                                # Cannot create due to missing FK target
+                                skip = True
+                                break
+                        continue
 
-    # -------------------------------
-    # CLIENTS
-    # -------------------------------
-    clients = []
-    for _ in range(8):
-        clients.append(
-            Client.objects.create(
-                name=fake.name(),
-                company_name=fake.company(),
-                email=fake.email(),
-                whatsapp=f"+1{fake.msisdn()[:10]}",
-                website=f"https://{fake.domain_name()}",
-            )
-        )
+                    if field.primary_key and getattr(field, 'auto_created', False):
+                        continue
 
-    # -------------------------------
-    # PROJECTS
-    # -------------------------------
-    projects = []
-    for i in range(12):
-        title = fake.catch_phrase()
-        project = Project.objects.create(
-            title=title,
-            slug=slugify(f"{title}-{i}"),
-            client=random.choice(clients),
-            excerpt=fake.paragraph(nb_sentences=2),
-            hero_description=fake.paragraph(nb_sentences=4),
-            live_url=f"https://{fake.domain_name()}",
-            repo_url="",
-            featured=i < 3,
-            published=True,
-            timeline=f"{random.randint(3,8)} weeks",
-            year=random.randint(2021, 2024),
-        )
+                    # Provide a value for common field types
+                    val = safe_value_for_field(field, fake)
+                    if val is None:
+                        if getattr(field, 'has_default', False) or field.blank:
+                            continue
+                        # Fallback for required unknown fields
+                        val = str(uuid.uuid4())[:40]
 
-        project.technologies.set(random.sample(skills, k=5))
-        project.services.set(random.sample(services, k=2))
+                    field_kwargs[field.name] = val
 
-        projects.append(project)
+                if skip:
+                    break
 
-        for j in range(3):
-            ProjectSection.objects.create(
-                project=project,
-                heading=fake.sentence(nb_words=4),
-                subheading=fake.sentence(nb_words=6),
-                body=fake.paragraph(nb_sentences=5),
-                order=j,
-                is_highlight=j == 1,
-            )
+                try:
+                    with transaction.atomic():
+                        inst = model.objects.create(**field_kwargs)
+                        # assign m2m
+                        for mm in m2m_fields:
+                            rel_model = mm.remote_field.model
+                            rels = existing_for(rel_model)
+                            if rels:
+                                sample = random.sample(rels, k=min(len(rels), random.randint(1, min(3, len(rels)))))
+                                getattr(inst, mm.name).set(sample)
+                        created[model].append(inst)
+                        can_create_any = True
+                except IntegrityError:
+                    # try again with different data
+                    continue
+                except Exception:
+                    # If model creation consistently fails, skip till next pass
+                    skip = True
+                    break
 
-    # -------------------------------
-    # BLOG
-    # -------------------------------
-    categories = []
-    for name in ["Shopify", "Themes", "Performance", "Development"]:
-        categories.append(
-            Category.objects.create(
-                name=name,
-                slug=slugify(name),
-            )
-        )
+            if can_create_any:
+                progressed = True
+            # If after attempting we have at least one instance, consider progress
+            if created.get(model):
+                pending.discard(model)
 
-    tags = []
-    for name in ["shopify", "liquid", "themes", "dawn", "performance"]:
-        tags.append(Tag.objects.create(name=name))
+        if not progressed:
+            # Nothing progressed this pass; avoid infinite loop
+            break
 
-    for i in range(10):
-        title = fake.sentence(nb_words=6)
-        post = Post.objects.create(
-            title=title,
-            slug=slugify(f"{title}-{i}"),
-            author=user,
-            content=fake.paragraph(nb_sentences=10),
-            excerpt=fake.paragraph(nb_sentences=2),
-            published=True,
-        )
-        post.categories.set(random.sample(categories, k=2))
-        post.tags.set(random.sample(tags, k=3))
+    # Summary
+    print("Seeding summary:")
+    for model, instances in created.items():
+        print(f"- {model._meta.app_label}.{model._meta.model_name}: {len(instances)} created")
 
-    # -------------------------------
-    # TESTIMONIALS
-    # -------------------------------
-    for i in range(8):
-        Testimonial.objects.create(
-            client=random.choice(clients),
-            project=random.choice(projects),
-            name=fake.name(),
-            role=random.choice(["Founder", "E-commerce Manager", "CTO"]),
-            company=fake.company(),
-            body=(
-                "Osama delivered a high-quality Shopify theme with excellent "
-                "performance and clean code. Communication was clear and timely."
-            ),
-            email=fake.email(),
-            featured=i < 3,
-            approved=True,
-            order=i,
-        )
-
-    # -------------------------------
-    # CONTACT MESSAGES
-    # -------------------------------
-    for _ in range(6):
-        Message.objects.create(
-            name=fake.name(),
-            email=fake.email(),
-            service=random.choice(services),
-            budget=Decimal(random.randint(500, 5000)),
-            body=fake.paragraph(nb_sentences=4),
-            is_read=random.choice([True, False]),
-        )
-
-    print("✅ FULL PROJECT SEEDED SUCCESSFULLY")
+    print("Done. Run `python faker_seed.py` again to re-run (it clears managed tables).")
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     run()

@@ -40,38 +40,31 @@
     <form method="POST" action="{% url 'contact' %}">
         {% csrf_token %}
 
-        <div class="form-group">
-            <label for="{{ form.name.id_for_label }}">Your Full Name*</label>
-            {{ form.name }}
-        </div>
+        {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                </label>
 
-        <div class="form-group">
-            <label for="{{ form.email.id_for_label }}">Work Email*</label>
-            {{ form.email }}
-        </div>
+                {{ field }}
 
-        <div class="form-group">
-            <label for="{{ form.service.id_for_label }}">
-                What service are you interested in?
-            </label>
-            {{ form.service }}
-        </div>
+                {% if field.help_text %}
+                    <small class="form-text text-muted">
+                        {{ field.help_text }}
+                    </small>
+                {% endif %}
 
-        <div class="form-group">
-            <label for="{{ form.budget.id_for_label }}">
-                Estimated Budget Range (BDT)*
-            </label>
-            {{ form.budget }}
-        </div>
+                {% if field.errors %}
+                    <div class="text-danger">
+                        {{ field.errors }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
 
-        <div class="form-group">
-            <label for="{{ form.body.id_for_label }}">
-                Project Details / Goals*
-            </label>
-            {{ form.body }}
-        </div>
-
-        <button type="submit" class="submit-btn">Send Inquiry</button>
+        <button type="submit" class="submit-btn">
+            Send Inquiry
+        </button>
     </form>
 </section>
 

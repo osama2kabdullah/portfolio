@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   
-  <title>{% if site_settings.meta_title %}{{ site_settings.meta_title }}{% else %}{{ site_settings.site_title }}{% endif %}</title>
+  <title>{% block title %}{% if site_settings.meta_title %}{{ site_settings.meta_title }}{% else %}{{ site_settings.site_title }}{% endif %}{% endblock %}</title>
   <meta name="description" content="{{ site_settings.meta_description }}">
   <meta property="og:title" content="{{ site_settings.og_title|default:site_settings.site_title }}">
   <meta property="og:description" content="{{ site_settings.og_description|default:site_settings.meta_description }}">

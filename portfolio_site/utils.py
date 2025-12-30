@@ -3,6 +3,8 @@ import resend
 from django.conf import settings
 from threading import Thread
 import logging
+from email.utils import formataddr
+from django.core.mail import EmailMultiAlternatives
 
 logger = logging.getLogger(__name__)
 
@@ -23,36 +25,35 @@ def render_thanks(request, session_key, redirect_url, template="general/thanks.h
     context = extra_context or {}
     return render(request, template, context)
 
-def send_resend_email(
+def send_django_email(
     *,
     subject: str,
     to: list[str],
     html: str,
     text: str | None = None,
     reply_to: str | None = None,
-    sender_name="Portfolio Website",
+    sender_name: str = "Portfolio Website",
 ):
-    payload = {
-        "from": f"{sender_name} <{settings.RESEND_FROM_EMAIL}>",
-        "to": to,
-        "subject": subject,
-        "html": html,
-    }
+    from_email = formataddr((sender_name, settings.DEFAULT_FROM_EMAIL))
 
-    if text:
-        payload["text"] = text
+    email = EmailMultiAlternatives(
+        subject=subject,
+        body=text or "",
+        from_email=from_email,
+        to=to,
+        reply_to=[reply_to] if reply_to else None,
+    )
 
-    if reply_to:
-        payload["reply_to"] = reply_to
+    email.attach_alternative(html, "text/html")
 
-    return resend.Emails.send(payload)
+    return email.send(fail_silently=False)
 
 
-def send_resend_email_async(**kwargs):
+def send_django_email_async(**kwargs):
     def _send():
         try:
-            send_resend_email(**kwargs)
+            send_django_email(**kwargs)
         except Exception:
-            logger.exception("Resend email failed")
+            logger.exception("Django email failed")
 
     Thread(target=_send, daemon=True).start()

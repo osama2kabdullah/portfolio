@@ -1,157 +1,152 @@
 {% extends "bn_base.html" %}
 {% load static %}
-{% block title %}Osama Abdullah | Senior Shopify Developer{% endblock %}
+{% block title %}Osama Abdullah | Shopify Developer{% endblock %}
 {% block css %}
 <link rel="stylesheet" href="{% static 'css/bn_about.css' %}" />
 {% endblock %} 
 {% block content %}
 <!-- Hero -->
 <header class="hero">
+    {% if page.hero_badge_text %}
     <div class="hero-badge">
-        <i class="ph-bold ph-seal-check"></i> Senior Shopify Specialist
+        <i class="ph-bold ph-seal-check"></i> {{ page.hero_badge_text }}
     </div>
-    <h1>ওসামা আবদুল্লাহ—আপনার <mark>শপিফাই কোডিং</mark> পার্টনার</h1>
-    <p>আমি ফ্রিল্যান্সার এবং এজেন্সিগুলোর জন্য ডেডিকেটেড ব্যাকএন্ড সাপোর্ট দিই। আপনার ক্লায়েন্টের কমপ্লেক্স রিকোয়ারমেন্ট এখন আমার দায়িত্ব।</p>
-    
-    <!-- Video Section - Static and Visible -->
+    {% endif %}
+
+    <h1>{{ page.hero_title }}</h1>
+    {% if page.hero_subtitle %}
+    <p>{{ page.hero_subtitle }}</p>
+    {% endif %}
+
+    {% if page.hero_video_url %}
     <div class="video-wrapper">
-        <iframe src="https://www.youtube.com/embed/bW6Chde6nu0?controls=1&rel=0" allowfullscreen></iframe>
+        <iframe 
+            src="{{ page.hero_video_url }}" 
+            title="YouTube video player" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;" 
+            referrerpolicy="strict-origin-when-cross-origin" 
+            allowfullscreen>
+        </iframe>
     </div>
+    {% else %}
+        {% if profile.profile_image %}  
+        <div class="video-wrapper">
+            <img src="{{ profile.profile_image.url }}" alt="Profile Image">
+        </div>
+        {% endif %}
+    {% endif %}
 
     <div class="btn-group">
+        {% if page.hero_cta_text and page.hero_cta_link %}
+        <a href="{{ page.hero_cta_link }}" class="btn btn-primary">{{ page.hero_cta_text }}</a>
+        {% else %}
         <a href="#scheduler" class="btn btn-primary">
             মিটিং শিডিউল করুন <i class="ph-bold ph-calendar"></i>
         </a>
+        {% endif %}
     </div>
 </header>
 
 <!-- Services -->
 <section class="section" id="services">
     <div class="center-title">
-        <h2>আমার এক্সপার্টাইজ</h2>
-        <p style="color: var(--text-muted)">যেকোনো থিম বা অ্যাপে আপনার প্রয়োজন মতো কোডিং সমাধান</p>
+        <h2>{{ page.service_title }}</h2>
+        <p style="color: var(--text-muted)">{{ page.service_subtitle }}</p>
         <div></div>
     </div>
     <div class="card-grid">
+        {% for service in page.services.all %}
         <div class="card">
-            <i class="ph-bold ph-layout"></i>
-            <h3>Custom Section Dev</h3>
-            <p>থিম এডিটরে সহজেই ড্র্যাগ-অ্যান্ড-ড্রপ করার জন্য কাস্টম লিকুইড সেকশন এবং ব্লক তৈরি করে দিই।</p>
+            {{ service.icon|safe }}
+            <h3>{{ service.title }}</h3>
+            <p>{{ service.description }}</p>
         </div>
-        <div class="card">
-            <i class="ph-bold ph-lightning"></i>
-            <h3>CRO Optimization</h3>
-            <p>কনভার্সন রেট বাড়ানোর জন্য কাস্টম এড-টু-কার্ট লজিক, আপসেল ফিচার এবং চেকআউট কাস্টমাইজেশন।</p>
-        </div>
-        <div class="card">
-            <i class="ph-bold ph-code-block"></i>
-            <h3>Liquid Fixes</h3>
-            <p>থিমের যেকোনো বাগ ফিক্সিং বা কোড ক্লিনআপ। ওএস ২.০ আর্কিটেকচার অনুযায়ী অপ্টিমাইজড কোড।</p>
-        </div>
+        {% endfor %}
     </div>
 </section>
 
 <!-- Portfolio Section -->
 <section class="section" id="portfolio" style="background: rgba(255,255,255,0.01);">
     <div class="center-title">
-        <h2>রিসেন্ট প্রজেক্টস</h2>
-        <p style="color: var(--text-muted)">আমার বিল্ড করা কিছু প্রিমিয়াম শপিফাই স্টোর</p>
+        <h2>{{ page.project_title }}</h2>
+        <p style="color: var(--text-muted)">{{ page.project_subtitle }}</p>
         <div></div>
     </div>
     <div class="portfolio-grid">
+        {% for project in page.projects.all %}
         <div class="portfolio-item">
+            {% if project.image %}
+            <div class="portfolio-img">
+                <img
+                    src="{{ project.image.url }}"
+                    alt="{{ project.title }}"
+                />
+            </div>
+            {% else %}
             <div class="portfolio-img"><i class="ph ph-shopping-cart"></i></div>
+            {% endif %}
+
             <div class="portfolio-info">
-                <h4>Fashion Brand OS 2.0</h4>
-                <p style="color: var(--text-muted); font-size: 0.9rem;">একটি সম্পূর্ণ কাস্টমাইজড ক্লোথিং স্টোর।</p>
+                <h4>{{ project.title }}</h4>
+                <a class="btn-link" href="{% url 'project_detail' project.slug %}">
+                    View Details ↗
+                </a>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 10px;">{{ project.excerpt|default:project.hero_description|truncatechars:270 }}</p>
                 <div class="portfolio-tags">
-                    <span class="tag">Liquid</span>
-                    <span class="tag">Tailwind</span>
-                    <span class="tag">Custom Schema</span>
+                    {% for technology in project.technologies.all %}
+                    <span class="tag">{{ technology.name }}</span>
+                    {% endfor %}
                 </div>
             </div>
         </div>
-        <div class="portfolio-item">
-            <div class="portfolio-img"><i class="ph ph-package"></i></div>
-            <div class="portfolio-info">
-                <h4>Tech Gadget Store</h4>
-                <p style="color: var(--text-muted); font-size: 0.9rem;">হাই-স্পিড অপ্টিমাইজড ইলেকট্রনিক্স শপ।</p>
-                <div class="portfolio-tags">
-                    <span class="tag">Speed Optimization</span>
-                    <span class="tag">Alpine.js</span>
-                </div>
-            </div>
-        </div>
-        <div class="portfolio-item">
-            <div class="portfolio-img"><i class="ph ph-storefront"></i></div>
-            <div class="portfolio-info">
-                <h4>Niche Dropshipping</h4>
-                <p style="color: var(--text-muted); font-size: 0.9rem;">কনভার্সন অপ্টিমাইজড ল্যান্ডিং পেজ ডিজাইন।</p>
-                <div class="portfolio-tags">
-                    <span class="tag">CRO</span>
-                    <span class="tag">UI/UX</span>
-                </div>
-            </div>
-        </div>
+        {% endfor %}
     </div>
 </section>
 
 <!-- Pricing Section -->
 <section class="section" id="pricing">
     <div class="center-title">
-        <h2>কো-ওয়ার্ক প্যাকেজ</h2>
-        <p style="color: var(--text-muted)">ফ্রিল্যান্সার ও এজেন্সিগুলোর জন্য ফ্লেক্সিবল পার্টনারশিপ</p>
+        <h2>{{ page.pricing_title }}</h2>
+        <p style="color: var(--text-muted)">{{ page.pricing_subtitle }}</p>
         <div></div>
     </div>
+
     <div class="pricing-grid">
-        <div class="pricing-card">
-            <h3>One-time Task</h3>
-            <div class="pricing-price">Custom</div>
+        {% for plan in page.pricing_plans.all %}
+        <div class="pricing-card {% if plan.featured %}featured{% endif %}">
+            <h3>{{ plan.name }}</h3>
+            <div class="pricing-price">{{ plan.price }}</div>
             <ul class="pricing-list">
-                <li><i class="ph-bold ph-check"></i> নির্দিষ্ট বাগ ফিক্সিং</li>
-                <li><i class="ph-bold ph-check"></i> সিঙ্গেল সেকশন ডেভেলপমেন্ট</li>
-                <li><i class="ph-bold ph-check"></i> ২৪ ঘণ্টা সাপোর্ট</li>
+                {% for feature in plan.features.splitlines %}
+                <li><i class="ph-bold ph-check"></i> {{ feature }}</li>
+                {% endfor %}
             </ul>
-            <a href="#contact" class="btn btn-primary" style="width: 100%; justify-content: center;">Hire Now</a>
+            {% if plan.cta_text and plan.cta_link %}
+            <a href="{{ plan.cta_link }}" class="btn btn-primary" style="width: 100%; justify-content: center;">{{ plan.cta_text }}</a>
+            {% endif %}
         </div>
-        <div class="pricing-card featured">
-            <h3>Project Based</h3>
-            <div class="pricing-price">Expert</div>
-            <ul class="pricing-list">
-                <li><i class="ph-bold ph-check"></i> কমপ্লিট থিম কাস্টমাইজেশন</li>
-                <li><i class="ph-bold ph-check"></i> অ্যাডভান্সড লিকুইড কোডিং</li>
-                <li><i class="ph-bold ph-check"></i> ডেডিকেটেড কো-ওয়ার্ক সাপোর্ট</li>
-            </ul>
-            <a href="#scheduler" class="btn btn-primary" style="width: 100%; justify-content: center;">Talk to Me</a>
-        </div>
-        <div class="pricing-card">
-            <h3>Monthly Retainer</h3>
-            <div class="pricing-price">Partner</div>
-            <ul class="pricing-list">
-                <li><i class="ph-bold ph-check"></i> আনলিমিটেড ছোট টাস্ক</li>
-                <li><i class="ph-bold ph-check"></i> এজেন্সি হোয়াইট লেবেল সাপোর্ট</li>
-                <li><i class="ph-bold ph-check"></i> প্রায়োরিটি ডেভেলপমেন্ট</li>
-            </ul>
-            <a href="#contact" class="btn btn-primary" style="width: 100%; justify-content: center;">Partner Up</a>
-        </div>
+        {% endfor %}
     </div>
 </section>
 
 <!-- Meeting Scheduler Section (Calendly Type) -->
 <section class="section" id="scheduler">
     <div class="center-title">
-        <h2>সরাসরি মিটিং শিডিউল করুন</h2>
-        <p style="color: var(--text-muted)">আপনার প্রজেক্টের ব্যাপারে বিস্তারিত আলোচনা করতে একটি সময় বেছে নিন</p>
+        <h2>{{ page.meeting_title }}</h2>
+        <p style="color: var(--text-muted)">{{ page.meeting_subtitle }}</p>
         <div></div>
     </div>
     
     <div class="calendly-section">
-
-      <!-- Calendly inline widget begin -->
-      <div class="calendly-inline-widget" data-url="https://calendly.com/abdullah21673/30min" style="min-width:320px;height:700px;"></div>
-      <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
-      <!-- Calendly inline widget end -->
-
+        {% if page.calendly_url %}
+        <!-- Calendly inline widget -->
+        <div class="calendly-inline-widget" 
+            data-url="{{ page.calendly_url }}" 
+            style="min-width:320px;height:700px;">
+        </div>
+        <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+        {% endif %}
     </div>
 </section>
 
@@ -159,40 +154,35 @@
 <section class="section" id="about" style="background: rgba(255,255,255,0.01);">
     <div class="experience-box">
         <div class="exp-content">
-            <h3>শুধুমাত্র শপিফাই, অন্য কিছু নয়!</h3>
-            <p style="color: var(--text-muted); margin-bottom: 2rem;">জুলাই ২০২৩ থেকে আমার পুরো সময় ব্যয় হয়েছে শপিফাই কোডিংয়ে। আপনি যদি এমন কাউকে খুঁজছেন যে শপিফাইয়ের ভাষা বোঝে, তবে আমিই আপনার সঠিক চয়েস।</p>
+            <h3>{{ page.experience_title }}</h3>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">{{ page.experience_subtitle }}</p>
             
             <div class="stats-grid">
                 <div class="stat-card">
-                    <h4>২+</h4>
+                    <h4>{{ profile.years_of_experience }}+</h4>
                     <p>বছর অভিজ্ঞতা</p>
                 </div>
                 <div class="stat-card">
-                    <h4>৫০+</h4>
+                    <h4>{{ project_count }}+</h4>
                     <p>সফল প্রজেক্ট</p>
                 </div>
                 <div class="stat-card">
-                    <h4>১০০%</h4>
+                    <h4>100%</h4>
                     <p>শপিফাই ফোকাস</p>
                 </div>
             </div>
         </div>
         <div class="exp-visual">
             <div style="background: var(--card-bg); padding: 30px; border-radius: 24px; border: 1px solid var(--glass-border);">
-                <h4 style="margin-bottom: 20px;">আমার সাথে কাজের ধাপসমূহ:</h4>
+                <h4 style="margin-bottom: 20px;">{{ page.process_title }}</h4>
+                <p style="color: var(--text-muted); margin-bottom: 2rem;">{{ page.process_subtitle }}</p>
                 <div class="process-grid">
+                    {% for step in page.process_steps.all %}
                     <div class="process-step">
-                        <div class="step-num">১</div>
-                        <p style="font-size: 0.85rem;">রিকোয়ারমেন্ট ডিসকাশন</p>
+                        <div class="step-num">{{ step.order }}</div>
+                        <p style="font-size: 0.85rem;">{{ step.title }}</p>
                     </div>
-                    <div class="process-step">
-                        <div class="step-num">২</div>
-                        <p style="font-size: 0.85rem;">কোড ইমপ্লিমেন্টেশন</p>
-                    </div>
-                    <div class="process-step">
-                        <div class="step-num">৩</div>
-                        <p style="font-size: 0.85rem;">টেস্টিং ও হ্যান্ডওভার</p>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -202,7 +192,8 @@
 <!-- Testimonials -->
 <section class="section" id="testimonials">
     <div class="center-title">
-        <h2>ক্লায়েন্টরা যা বলছেন</h2>
+        <h2>{{ page.testimonial_title }}</h2>
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">{{ page.testimonial_subtitle }}</p>
         <div></div>
     </div>
     <div class="testimonial-grid">
@@ -217,47 +208,31 @@
                 </div>
             </div>
         </div>
-        <div class="testimonial-card">
-            <div class="stars">★★★★★</div>
-            <p>"খুবই ক্লিন কোড এবং ডেডলাইনের মধ্যে কাজ শেষ করে। শপিফাই থিম বিল্ডে সে এক্সপার্ট।"</p>
-            <div class="user-info" style="margin-top: 20px;">
-                <div class="user-avatar"></div>
-                <div>
-                    <h5 style="margin-bottom: 2px;">Freelance Designer</h5>
-                    <small style="color: var(--text-muted);">Partner Freelancer</small>
-                </div>
-            </div>
-        </div>
     </div>
 </section>
 
 <!-- FAQ Section -->
 <section class="section" style="background: rgba(255,255,255,0.01);">
     <div class="center-title">
-        <h2>সাধারণ জিজ্ঞাসা (FAQ)</h2>
+        <h2>{{ page.faq_title }}</h2>
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">{{ page.faq_subtitle }}</p>
         <div></div>
     </div>
     <div class="faq-container">
+        {% for faq in page.faqs.all %}
         <div class="faq-item">
-            <h4>আপনি কি থিম ছাড়া অ্যাপ ডেভেলপমেন্ট করেন?</h4>
-            <p style="color: var(--text-muted);">আমি শপিফাই অ্যাপের বেসিক জানি, তবে আমার মূল ফোকাস এবং দক্ষতা থিম ডেভেলপমেন্ট এবং লিকুইড কোডিংয়ে।</p>
+            <h4>{{ faq.question }}</h4>
+            <p style="color: var(--text-muted);">{{ faq.answer }}</p>
         </div>
-        <div class="faq-item">
-            <h4>আপনি কি সরাসরি ক্লায়েন্টের সাথে কথা বলেন?</h4>
-            <p style="color: var(--text-muted);">আমি মূলত ফ্রিল্যান্সার বা এজেন্সির হয়ে পর্দার আড়ালে কাজ করতে পছন্দ করি, তবে প্রয়োজন হলে আপনার ক্লায়েন্টকে টেকনিক্যাল সাপোর্ট দিতে পারি।</p>
-        </div>
-        <div class="faq-item">
-            <h4>একটি কাস্টম সেকশন তৈরি করতে কত সময় লাগে?</h4>
-            <p style="color: var(--text-muted);">কমপ্লেক্সিটি অনুযায়ী সাধারণত কয়েক ঘণ্টা থেকে ১ দিনের মধ্যে আমি ডেলিভারি দিতে পারি।</p>
-        </div>
+        {% endfor %}
     </div>
 </section>
 
 <!-- Contact Form Section -->
 <section class="section" id="contact">
     <div class="center-title">
-        <h2>চলো একসাথে কাজ করি</h2>
-        <p style="color: var(--text-muted);">আপনার প্রজেক্টের রিকোয়ারমেন্ট পাঠান</p>
+        <h2>{{ page.contact_title }}</h2>
+        <p style="color: var(--text-muted);">{{ page.contact_subtitle }}</p>
         <div></div>
     </div>
     <div class="contact-layout">
@@ -265,7 +240,7 @@
             <div class="card" style="margin-bottom: 20px;">
                 <i class="ph-bold ph-envelope"></i>
                 <h4>Email Me</h4>
-                <p style="color: var(--text-muted);">hello@osama.com</p>
+                <p style="color: var(--text-muted);">{{ profile }}</p>
             </div>
             <div class="card">
                 <i class="ph-bold ph-whatsapp-logo"></i>
@@ -274,24 +249,31 @@
             </div>
         </div>
         <div class="form-container">
-            <form action="#">
-                <div class="form-group">
-                    <label>আপনার নাম</label>
-                    <input type="text" placeholder="যেমন: ওসামা আবদুল্লাহ">
-                </div>
-                <div class="form-group">
-                    <label>ইমেইল এড্রেস</label>
-                    <input type="email" placeholder="email@example.com">
-                </div>
-                <div class="form-group">
-                    <label>আপনার প্রজেক্টের ধরন</label>
-                    <input type="text" placeholder="যেমন: থিম কাস্টমাইজেশন বা বাগ ফিক্স">
-                </div>
-                <div class="form-group">
-                    <label>বিস্তারিত মেসেজ</label>
-                    <textarea rows="5" placeholder="আপনার প্রজেক্টের বিস্তারিত এখানে লিখুন..."></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+            <form method="POST">
+                {% csrf_token %}
+
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+
+                        {% if field.help_text %}
+                            <small class="form-text text-muted">
+                                {{ field.help_text }}
+                            </small>
+                        {% endif %}
+
+                        {% if field.errors %}
+                            <div class="text-danger">
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <button type="submit"
+                        class="btn btn-primary"
+                        style="width: 100%; justify-content: center;">
                     মেসেজ পাঠান <i class="ph-bold ph-paper-plane-tilt"></i>
                 </button>
             </form>
