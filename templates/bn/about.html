@@ -197,17 +197,28 @@
         <div></div>
     </div>
     <div class="testimonial-grid">
+        {% for testimonial in page.testimonials.all %}
         <div class="testimonial-card">
-            <div class="stars">★★★★★</div>
-            <p>"ওসামার লিকুইড কোডিং নলেজ অসাধারন। আমার এজেন্সি প্রজেক্টে সে লাইফ সেভার ছিল।"</p>
+            <div class="stars">
+                {% for _ in "12345" %}
+                {% if forloop.counter <= testimonial.rating %}
+                ★
+                {% else %}
+                ☆
+                {% endif %}
+                {% endfor %}
+            </div>
+
+            <p>"{{ testimonial.body }}"</p>
             <div class="user-info" style="margin-top: 20px;">
                 <div class="user-avatar"></div>
                 <div>
-                    <h5 style="margin-bottom: 2px;">Agency Owner</h5>
-                    <small style="color: var(--text-muted);">Upwork Client</small>
+                    <h5 style="margin-bottom: 2px;">{{ testimonial.name }}</h5>
+                    <small style="color: var(--text-muted);">{{ testimonial.role }}</small>
                 </div>
             </div>
         </div>
+        {% endfor %}
     </div>
 </section>
 
@@ -240,12 +251,12 @@
             <div class="card" style="margin-bottom: 20px;">
                 <i class="ph-bold ph-envelope"></i>
                 <h4>Email Me</h4>
-                <p style="color: var(--text-muted);">{{ profile }}</p>
+                <p style="color: var(--text-muted);">abdullah21673@hotmail.com</p>
             </div>
             <div class="card">
                 <i class="ph-bold ph-whatsapp-logo"></i>
                 <h4>WhatsApp</h4>
-                <p style="color: var(--text-muted);">+880 1XXX XXXXXX</p>
+                <p style="color: var(--text-muted);">+880 1635-307889</p>
             </div>
         </div>
         <div class="form-container">

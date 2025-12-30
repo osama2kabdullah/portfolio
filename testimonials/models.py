@@ -11,6 +11,12 @@ class Testimonial(models.Model):
     company = models.CharField(max_length=140, blank=True)
     body = models.TextField()
     email = models.EmailField(blank=True)
+
+    rating = models.PositiveSmallIntegerField(
+        default=5,
+        choices=[(i, f"{i} Stars") for i in range(1, 6)],
+        help_text="Rating out of 5",
+    )
     
     featured = models.BooleanField(default=False)
     approved = models.BooleanField(default=False)

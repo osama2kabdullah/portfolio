@@ -25,8 +25,35 @@ def testimonial_submit(request):
     if project_slug:
         project = get_object_or_404(Project, slug=project_slug, published=True)
 
+    form_config = {
+        "name": {
+            "label": "Your Full Name",
+            "placeholder": "Jane Smith",
+        },
+        "company": {
+            "label": "Company Name",
+            "placeholder": "TechSolutions",
+        },
+        "email": {
+            "label": "Email Address (will be kept private)",
+            "placeholder": "jane@example.com",
+        },
+        "role": {
+            "label": "Role / Your Title ",
+            "placeholder": "CEO",
+        },
+        "rating": {
+            "label": "Your Rating",
+            "help_text": "1 = Poor, 5 = Excellent",
+        },
+        "body": {
+            "label": "Your Testimonial",
+            "placeholder": "Alex delivered a flawless system...",
+        },
+    }
+
     if request.method == "POST":
-        form = TestimonialSubmissionForm(request.POST, project=project)
+        form = TestimonialSubmissionForm(request.POST, project=project, config=form_config,)
         if form.is_valid():
             testimonial = form.save()
 
@@ -107,7 +134,7 @@ def testimonial_submit(request):
                 )
             return redirect("testimonial_thanks")
     else:
-        form = TestimonialSubmissionForm(project=project)
+        form = TestimonialSubmissionForm(project=project, config=form_config,)
 
     page_settings = TestimonialPageSettings.objects.first()
     return render(

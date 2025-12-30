@@ -9,8 +9,8 @@ class TestimonialPageSettingsAdmin(admin.ModelAdmin):
 
 @admin.register(Testimonial)
 class TestimonialAdmin(admin.ModelAdmin):
-    list_display = ("name","project","approved",)
-    list_filter = ("approved","featured","project",)
+    list_display = ("name", "rating", "project","approved",)
+    list_filter = ("approved","created", "featured","rating",)
     search_fields = ("name","company","role","body",)
     ordering = ("-featured", "order",)
     list_editable = ("approved",)

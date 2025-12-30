@@ -6,18 +6,40 @@ from projects.models import Client, Project
 class TestimonialSubmissionForm(forms.ModelForm):
     class Meta:
         model = Testimonial
-        fields = ["name", "email", "company", "role", "body", "project"]
+        fields = [
+            "name","email","company","role","rating","body","project",
+        ]
         widgets = {
-            "body": forms.Textarea(attrs={
-                "rows": 6,
-                "placeholder": "Share your experience working with me…"
-            }),
+            "rating": forms.RadioSelect(),
+            "body": forms.Textarea(attrs={"rows": 6}),
         }
 
-    def __init__(self, *args, project=None, **kwargs):
+    def __init__(self, *args, project=None, config=None, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # If project is forced via URL → hide selector
+        # ---------- CONFIG CONTROL (labels, placeholders, help text) ----------
+        config = config or {}
+
+        for field_name, field_config in config.items():
+            if field_name not in self.fields:
+                continue
+
+            field = self.fields[field_name]
+
+            if "label" in field_config:
+                field.label = field_config["label"]
+
+            if "help_text" in field_config:
+                field.help_text = field_config["help_text"]
+
+            if "placeholder" in field_config:
+                field.widget.attrs["placeholder"] = field_config["placeholder"]
+
+        remove_fields = config.get("_remove", [])
+        for field_name in remove_fields:
+            self.fields.pop(field_name, None)
+
+        # ---------- PROJECT HANDLING ----------
         if project:
             self.fields["project"].widget = forms.HiddenInput()
             self.initial["project"] = project
@@ -29,7 +51,6 @@ class TestimonialSubmissionForm(forms.ModelForm):
         testimonial = super().save(commit=False)
 
         email = self.cleaned_data.get("email")
-
         if email:
             client, _ = Client.objects.get_or_create(
                 email=email,

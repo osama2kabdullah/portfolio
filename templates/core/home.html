@@ -134,6 +134,17 @@ Alex | Digital Craftsman
      <div class="section-title">Testimonials</div>
      {% for testimonial in testimonials %}
      <div class="review-card">
+
+        <div class="review-rating">
+          {% for _ in "12345" %}
+          {% if forloop.counter <= testimonial.rating %}
+          ★
+          {% else %}
+          ☆
+          {% endif %}
+          {% endfor %}
+        </div>
+
        <p class="review-quote">
          "{{ testimonial.body }}"
        </p>

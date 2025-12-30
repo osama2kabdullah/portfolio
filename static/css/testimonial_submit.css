@@ -23,3 +23,37 @@
     border-radius: var(--radius);
     box-shadow: 0 20px 40px rgba(0,0,0,0.05);
 }
+
+.rating-stars {
+    display: flex;
+    gap: 6px;
+}
+
+.rating-stars input[type="radio"] {
+    display: none;
+}
+
+.form-group .rating-stars label {
+    font-size: 1.6rem;
+    cursor: pointer;
+    position: relative;
+    color: #f5b301;
+}
+
+.rating-stars label::before {
+    content: "★";
+}
+
+/* Highlight stars for selected value and all previous siblings */
+.rating-stars input[type="radio"]:hover + label {
+    color: #f5b301;
+}
+.rating-stars input[type="radio"]:checked + label ~ label {
+    color: var(--text-muted);
+}
+
+/* Hover highlight */
+.rating-stars label:hover,
+.rating-stars label:hover ~ label {
+    color: var(--text-muted);
+}

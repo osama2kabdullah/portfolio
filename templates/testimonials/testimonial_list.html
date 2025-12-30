@@ -18,9 +18,21 @@
 <section class="reviews-grid section-padding" style="padding-top: 0;">
   {% for testimonial in testimonials %}
     <div class="review-card">
+      
+      <div class="review-rating">
+        {% for _ in "12345" %}
+        {% if forloop.counter <= testimonial.rating %}
+        ★
+        {% else %}
+        ☆
+        {% endif %}
+        {% endfor %}
+      </div>
+      
       <p class="review-quote">
         "{{ testimonial.body }}"
       </p>
+
       <div style="display: flex; gap: 15px; align-items: center">
         <div
           style="
