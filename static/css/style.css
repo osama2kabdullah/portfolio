@@ -268,10 +268,16 @@ nav {
     background: #fff;
     border: 1px solid var(--glass-border);
     border-radius: 20px;
-    padding: 25px;
     margin-bottom: 20px;
 }
-.faq-item h4 { margin-bottom: 10px; color: var(--text-main); }
+.faq-item h4 { 
+    color: var(--text-main); 
+    padding: 15px;
+}
+
+.faq-item p {
+    padding: 0 15px;
+}
 
 /* Contact Form */
 .form-container {
@@ -280,6 +286,23 @@ nav {
     border-radius: 28px;
     border: 1px solid var(--glass-border);
     box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+}
+
+.form-container button[type="submit"] .btn-content{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.form-container button[type="submit"] {
+    width: 100%;
+}
+
+.form-container .message {
+    margin-bottom: 15px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    display: none;
 }
 
 .form-group { margin-bottom: 25px; }
@@ -329,8 +352,44 @@ nav {
     font-size: 1rem;
 }
 
-.btn-primary { background: var(--shopify-green); color: #fff; }
+.btn-primary { 
+    background: var(--shopify-green); 
+    color: #fff; 
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0, 128, 96, 0.25); }
+
+
+.btn-primary .loader {
+    width: 20px;
+    height: 20px;
+    border: 2px solid transparent;
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    position: absolute;
+    opacity: 0;
+}
+
+.btn-primary.loading .btn-content {
+    visibility: hidden;
+}
+
+.btn-primary.loading .loader {
+    opacity: 1;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
 
 footer {
     padding: 60px 8%;
