@@ -9,6 +9,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf import settings
 from contact.models import ContactSettings
+from about_me.models import Profile
 from portfolio_site.utils import send_django_email_async
 
 def testimonials_list(request):
@@ -57,13 +58,18 @@ def testimonial_submit(request):
         if form.is_valid():
             testimonial = form.save()
 
-            settings_obj = ContactSettings.objects.first()
-            sender_name = settings_obj.sender_name or "Portfolio Website"
-            recipient_email = (
-                settings_obj.recipient_email
-                if settings_obj and settings_obj.recipient_email
-                else settings.RESEND_FROM_EMAIL
-            )
+            # Prefer contact info from the Profile singleton
+            profile = Profile.load()
+            sender_name = profile.full_name if profile and profile.full_name else "Portfolio Website"
+            recipient_email = profile.email if profile and profile.email else None
+
+            if not recipient_email:
+                settings_obj = ContactSettings.objects.first()
+                recipient_email = (
+                    settings_obj.recipient_email
+                    if settings_obj and settings_obj.recipient_email
+                    else settings.RESEND_FROM_EMAIL
+                )
 
             # =============================
             # 1️⃣ ADMIN NOTIFICATION

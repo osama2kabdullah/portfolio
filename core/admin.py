@@ -1,5 +1,19 @@
 from django.contrib import admin
 from .models import SiteSettings
+from .models import ContentBlock
+from django.contrib.contenttypes.admin import GenericTabularInline
+
+
+class ContentBlockInline(GenericTabularInline):
+    model = ContentBlock
+    extra = 1
+    fields = ("block_type", "heading", "body", "image", "order")
+
+
+@admin.register(ContentBlock)
+class ContentBlockAdmin(admin.ModelAdmin):
+    list_display = ("__str__", "content_type", "object_id", "block_type", "order")
+    list_filter = ("block_type", "content_type")
 
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):

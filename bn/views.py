@@ -2,14 +2,13 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import BNAboutPage
 from projects.models import Project
 from about_me.models import Profile
-from contact.models import ContactSettings
 from contact.forms import ContactForm
 from contact.services import handle_contact_submission
 
 def about(request):
     page = get_object_or_404(BNAboutPage)
     project_count = Project.objects.count()
-    profile = Profile.objects.filter(is_active=True).first()
+    profile = Profile.load()
 
     # Bangla form configuration
     form_config = {

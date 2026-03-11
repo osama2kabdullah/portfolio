@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.template.loader import render_to_string
 from portfolio_site.utils import send_django_email_async
+from about_me.models import Profile
+from contact.models import ContactSettings
 
 
 def handle_contact_submission(
@@ -14,16 +16,17 @@ def handle_contact_submission(
 ):
     message = form.save()
 
-    settings_obj = getattr(message, "settings", None)
-    sender_name = (
-        getattr(settings_obj, "sender_name", None)
-        or "Portfolio Website"
-    )
+    # Prefer the singleton Profile contact info. Fall back to ContactSettings, then to settings.
+    profile = Profile.load()
+    sender_name = profile.full_name if profile and profile.full_name else "Portfolio Website"
+    recipient_email = profile.email if profile and profile.email else None
 
-    recipient_email = (
-        getattr(settings_obj, "recipient_email", None)
-        or settings.DEFAULT_FROM_EMAIL
-    )
+    if not recipient_email:
+        settings_obj = ContactSettings.objects.first()
+        recipient_email = (
+            getattr(settings_obj, "recipient_email", None)
+            or settings.DEFAULT_FROM_EMAIL
+        )
 
     # Admin email
     text_admin = render_to_string(

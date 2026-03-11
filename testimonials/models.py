@@ -1,6 +1,8 @@
 from django.db import models
-from projects.models import Client, Project
+from projects.models import Project
+from client.models import Client
 from django.utils import timezone
+from core.models import SeoMixin
 
 class Testimonial(models.Model):
     client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True, blank=True, related_name="testimonials")
@@ -30,7 +32,7 @@ class Testimonial(models.Model):
     def __str__(self):
         return f"{self.name} — {self.company or ''}"
 
-class TestimonialPageSettings(models.Model):
+class TestimonialPageSettings(SeoMixin, models.Model):
     """
     Singleton model to store dynamic text for testimonial pages.
     """

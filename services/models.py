@@ -1,7 +1,8 @@
 from django.db import models
+from core.models import SeoMixin
 
 
-class Service(models.Model):
+class Service(SeoMixin, models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=220, unique=True)
     description = models.TextField(blank=True)

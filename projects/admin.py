@@ -1,5 +1,7 @@
 from django.contrib import admin
 from .models import Client, Project, ProjectSection, Skill, ProjectImage
+from django.contrib.contenttypes.admin import GenericTabularInline
+from core.models import ContentBlock
 
 
 class ProjectImageInline(admin.TabularInline):
@@ -19,6 +21,14 @@ class ProjectAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
     filter_horizontal = ("technologies", "services")
     inlines = (ProjectSectionInline, ProjectImageInline)
+
+
+class ContentBlockInline(GenericTabularInline):
+    model = ContentBlock
+    extra = 1
+    fields = ("block_type", "heading", "body", "image", "order")
+
+ProjectAdmin.inlines = ProjectAdmin.inlines + (ContentBlockInline,)
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):

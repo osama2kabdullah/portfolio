@@ -6,7 +6,7 @@ from testimonials.models import Testimonial
 from about_me.models import Profile
 
 def home(request):
-    profile = Profile.objects.filter(is_active=True).first()
+    profile = Profile.load()
     projects = Project.objects.filter(published=True).order_by("-created")[:6]
     project_count = Project.objects.count()
     posts = Post.objects.filter(published=True).order_by("-created")[:3]

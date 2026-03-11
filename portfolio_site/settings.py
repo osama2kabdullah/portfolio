@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "about_me",
     "debug_toolbar",
     "bn",
+    "client",
 ]
 
 MIDDLEWARE = [

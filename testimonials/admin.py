@@ -1,11 +1,21 @@
 from django.contrib import admin
 from .models import Testimonial, TestimonialPageSettings
+from django.contrib.contenttypes.admin import GenericTabularInline
+from core.models import ContentBlock
 
 @admin.register(TestimonialPageSettings)
 class TestimonialPageSettingsAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         # Only allow one instance
         return not TestimonialPageSettings.objects.exists()
+
+
+class ContentBlockInline(GenericTabularInline):
+    model = ContentBlock
+    extra = 1
+    fields = ("block_type", "heading", "body", "image", "order")
+
+TestimonialPageSettingsAdmin.inlines = [ContentBlockInline]
 
 @admin.register(Testimonial)
 class TestimonialAdmin(admin.ModelAdmin):

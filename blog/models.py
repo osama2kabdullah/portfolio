@@ -1,10 +1,11 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from core.models import SeoMixin
 
 User = get_user_model()
 
 
-class Post(models.Model):
+class Post(SeoMixin, models.Model):
     title = models.CharField(max_length=220)
     slug = models.SlugField(max_length=240, unique=True)
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)

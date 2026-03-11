@@ -1,5 +1,7 @@
 from django.contrib import admin
 from .models import Service, Deliverable, ProcessStep
+from django.contrib.contenttypes.admin import GenericTabularInline
+from core.models import ContentBlock
 
 class DeliverableInline(admin.TabularInline):
     model = Deliverable
@@ -26,6 +28,14 @@ class ServiceAdmin(admin.ModelAdmin):
         DeliverableInline,
         ProcessStepInline,
     ]
+
+
+class ContentBlockInline(GenericTabularInline):
+    model = ContentBlock
+    extra = 1
+    fields = ("block_type", "heading", "body", "image", "order")
+
+ServiceAdmin.inlines = ServiceAdmin.inlines + [ContentBlockInline]
 
 
 @admin.register(Deliverable)

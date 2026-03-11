@@ -1,5 +1,6 @@
 from django.db import models
-
+from core.models import SeoMixin
+from client.models import Client
 
 class Skill(models.Model):
     name = models.CharField(max_length=100)
@@ -12,17 +13,7 @@ class Skill(models.Model):
     def __str__(self):
         return f"{self.name} ({self.level})"
 
-class Client(models.Model):
-    name = models.CharField(max_length=200)
-    company_name = models.CharField(max_length=200, blank=True)
-    email = models.EmailField(blank=True)
-    whatsapp = models.CharField(max_length=50, blank=True)
-    website = models.URLField(blank=True)
-
-    def __str__(self):
-        return self.name
-
-class Project(models.Model):
+class Project(SeoMixin, models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=220, unique=True)
     client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True, blank=True, related_name="projects")

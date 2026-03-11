@@ -13,4 +13,5 @@ urlpatterns = [
     path("testimonials/", include("testimonials.urls")),
     path('admin/', include(('dashboard.urls', 'dashboard'), namespace='dashboard')),
     path("bn/", include("bn.urls")),
+    path("clients/", include("client.urls")),
 ]+ debug_toolbar_urls()
